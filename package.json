@@ -1,0 +1,20 @@
+{
+  "name": "wizwealth90",
+  "version": "1.0.0",
+  "description": "90-dagars Wealth Identity Program i Miller-stil",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "wealth",
+    "coaching",
+    "personal-development",
+    "90-day-program"
+  ],
+  "author": "Chris 'The Wiz' Miller",
+  "license": "UNLICENSED",
+  "private": true
+}
+

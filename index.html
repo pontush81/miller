@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WizWealth90 – Chris "The Wiz" Miller Program</title>
+  <meta name="description" content="90-dagars Wealth Identity Program i Miller-stil">
+  <meta name="theme-color" content="#0b0f16">
+  <style>
+    :root {
+      --bg:#0b0f16; --card:#121826; --muted:#8ea0b5; --text:#e8eef7; 
+      --acc:#7bd88f; --acc2:#8ab4ff; --border:#1c2635; --input:#152032;
+      --hover:#2f466b; --pill:#0f1a2a; --pillBorder:#21314b;
+      --mantraBg:#10192a; --mantraBorder:#8ab4ff; --textarea:#10192a;
+      --textareaBorder:#1e2b44; --badge:#10263b; --badgeBorder:#234b73;
+      --badgeText:#cde3ff;
+    }
+    [data-theme="light"] {
+      --bg:#f6f8fb; --card:#ffffff; --muted:#64748b; --text:#111827;
+      --acc:#10b981; --acc2:#3b82f6; --border:#e2e8f0; --input:#f1f5f9;
+      --hover:#cbd5e1; --pill:#f8fafc; --pillBorder:#cbd5e1;
+      --mantraBg:#eff6ff; --mantraBorder:#3b82f6; --textarea:#f8fafc;
+      --textareaBorder:#cbd5e1; --badge:#dbeafe; --badgeBorder:#93c5fd;
+      --badgeText:#1e40af;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;transition:background 0.3s, color 0.3s}
+    header{position:sticky;top:0;background:var(--bg);z-index:5;padding:16px 20px 8px;border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
+    .header-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.2px}
+    .sub{color:var(--muted);font-size:13px;margin-top:2px}
+    main{max-width:920px;margin:24px auto;padding:0 16px 60px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    button, input[type="number"], select {border:1px solid var(--border);background:var(--input);color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer;transition:border-color 0.2s}
+    button:hover{border-color:var(--hover)}
+    .theme-toggle{background:transparent;border:1px solid var(--border);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:18px}
+    .theme-toggle:hover{border-color:var(--hover);transform:scale(1.05)}
+    .pill{background:var(--pill);border:1px solid var(--pillBorder);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media (min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:background 0.3s, border 0.3s}
+    h2{font-size:18px;margin:0 0 8px}
+    h3{font-size:15px;margin:14px 0 6px;color:var(--text);opacity:0.9}
+    .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .big{font-size:15px}
+    ul{margin:8px 0 0 18px}
+    .muted{color:var(--muted)}
+    .badge{display:inline-block;background:var(--badge);border:1px solid var(--badgeBorder);color:var(--badgeText);padding:3px 8px;border-radius:8px;font-size:12px}
+    .mantra{border-left:3px solid var(--mantraBorder);padding:8px 12px;background:var(--mantraBg);border-radius:8px;margin:6px 0;color:var(--text)}
+    .ok{color:var(--acc)}
+    .danger{color:#ff8a8a}
+    .hr{height:1px;background:var(--border);margin:8px 0 12px}
+    .footer{font-size:12px;color:var(--muted);margin-top:16px}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .grow{flex:1}
+    .small{font-size:12px}
+    textarea{width:100%;min-height:110px;background:var(--textarea);color:var(--text);border:1px solid var(--textareaBorder);border-radius:10px;padding:10px;transition:background 0.3s, border 0.3s}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+    a.link{color:var(--acc2)}
+    .goal-widget{background:var(--mantraBg);border:1px solid var(--mantraBorder);border-radius:10px;padding:12px;margin:12px 0}
+    .goal-input{width:100%;background:var(--textarea);border:1px solid var(--textareaBorder);color:var(--text);padding:8px;border-radius:8px;font-size:13px}
+    .goal-list{list-style:none;padding:0;margin:8px 0 0}
+    .goal-item{display:flex;gap:8px;align-items:center;padding:6px 0;font-size:13px}
+    .goal-checkbox{width:16px;height:16px;cursor:pointer}
+    .goal-completed{text-decoration:line-through;opacity:0.6}
+    
+    /* Profile modal */
+    .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+    .modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:400px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.4)}
+    .modal h2{margin:0 0 12px;font-size:20px}
+    .modal p{color:var(--muted);margin:0 0 16px;font-size:14px}
+    .modal input{width:100%;padding:10px;background:var(--input);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;margin-bottom:12px}
+    .modal-buttons{display:flex;gap:8px;justify-content:flex-end}
+    .profile-selector{position:relative;display:inline-block}
+    .profile-btn{display:flex;align-items:center;gap:6px;background:var(--input);border:1px solid var(--border);padding:6px 12px;border-radius:10px;cursor:pointer;font-size:13px}
+    .profile-btn:hover{border-color:var(--hover)}
+    .profile-dropdown{display:none;position:absolute;top:100%;right:0;margin-top:4px;background:var(--card);border:1px solid var(--border);border-radius:10px;min-width:200px;box-shadow:0 8px 16px rgba(0,0,0,0.3);z-index:10}
+    .profile-dropdown.show{display:block}
+    .profile-item{padding:10px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border)}
+    .profile-item:hover{background:var(--input)}
+    .profile-item:last-child{border-bottom:none}
+    .profile-item.active{color:var(--acc);font-weight:600}
+    .profile-item.delete{color:var(--danger)}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div>
+        <h1>WizWealth90</h1>
+        <div class="sub">Chris "The Wiz" Miller – 90-dagars Wealth Identity Program</div>
+      </div>
+      <div class="row">
+        <div class="profile-selector">
+          <button class="profile-btn" id="profileBtn" title="Byt profil">
+            👤 <span id="currentProfile">Profil</span>
+          </button>
+          <div class="profile-dropdown" id="profileDropdown">
+            <div id="profileList"></div>
+            <div class="profile-item" id="btnNewProfile" style="border-top:1px solid var(--border)">+ Ny profil</div>
+          </div>
+        </div>
+        <button class="theme-toggle" id="themeToggle" title="Byt tema">🌙</button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2 id="modalTitle">Välkommen! 👋</h2>
+      <p id="modalDesc">Skapa din profil för att börja programmet. Flera personer kan använda samma enhet.</p>
+      <input type="text" id="profileNameInput" placeholder="Ditt namn (t.ex. Anna, Johan...)" maxlength="30">
+      <div class="modal-buttons">
+        <button id="modalCancel" class="hidden">Avbryt</button>
+        <button id="modalConfirm" class="ok">Skapa profil</button>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div class="toolbar row">
+      <span class="pill">Kodord: <b>WizWealth90</b></span>
+      <button id="btnPrev" title="Föregående dag">← Föregående</button>
+      <button id="btnToday" title="Visa sparad dag">Idag</button>
+      <button id="btnNext" class="ok" title="Nästa dag">Nästa dag →</button>
+      <div class="row">
+        <label class="small muted" for="gotoDay">Gå till dag:</label>
+        <input id="gotoDay" type="number" min="1" max="90" style="width:84px">
+        <button id="btnGoto">Gå</button>
+      </div>
+      <div class="grow"></div>
+      <button id="btnExport">Exportera</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none">
+      <button id="btnImport">Importera</button>
+      <button id="btnReset" class="danger">Återställ</button>
+    </div>
+
+    <div class="grid">
+      <section class="card" id="dayCard">
+        <div class="kicker" id="kicker"></div>
+        <h2 id="title"></h2>
+        <div id="theme" class="badge"></div>
+        <div class="hr"></div>
+        <div id="pep" class="big"></div>
+        <h3>🕒 10–15 min: Dagens Miller-rutin</h3>
+        <ul id="routine"></ul>
+        <h3>🎯 First Domino-idéer</h3>
+        <ul id="domino"></ul>
+        <h3>🌙 Kvällsdebrief</h3>
+        <ul id="evening"></ul>
+        <h3>💬 Dagens mantra</h3>
+        <div id="mantra" class="mantra mono"></div>
+        <div class="footer">Din plats sparas automatiskt (lokalt i webbläsaren).</div>
+      </section>
+
+      <aside class="card">
+        <h3>📆 Veckotema</h3>
+        <div id="weekTheme" class="big"></div>
+        
+        <div class="hr"></div>
+        <h3>🎯 Veckans mål</h3>
+        <div class="goal-widget">
+          <input type="text" class="goal-input" id="newGoal" placeholder="Lägg till veckans mål...">
+          <ul class="goal-list" id="goalList"></ul>
+        </div>
+        
+        <div class="hr"></div>
+        <h3>🧰 Snabbverktyg</h3>
+        <ul class="small">
+          <li><b>Mikro-reset (30s):</b> Andas 4-2-6 + säg "Jag väljer överflöd nu".</li>
+          <li><b>Kaffet som ankare:</b> Ta första klunken som om du redan är ekonomiskt fri.</li>
+          <li><b>Intrycksdiet:</b> 10% mindre negativ input idag.</li>
+        </ul>
+        <div class="hr"></div>
+        <h3>📝 Anteckningar</h3>
+        <textarea id="notes" placeholder="Dina lärdomar idag..."></textarea>
+        <div class="row small" style="margin-top:6px">
+          <div class="grow muted">Sparas automatiskt lokalt</div>
+          <button id="btnClearNotes">Rensa</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_PROFILES = 'wizwealth90.profiles';
+    const STORAGE_CURRENT_PROFILE = 'wizwealth90.currentProfile';
+    const STORAGE_KEY_DAY = 'wizwealth90.day';
+    const STORAGE_NOTES_PREFIX = 'wizwealth90.notes.';
+    const STORAGE_THEME = 'wizwealth90.theme';
+    const STORAGE_GOALS_PREFIX = 'wizwealth90.goals.';
+    
+    // ---- Profile Management ----
+    function getAllProfiles(){
+      const stored = localStorage.getItem(STORAGE_PROFILES);
+      return stored ? JSON.parse(stored) : [];
+    }
+    
+    function saveAllProfiles(profiles){
+      localStorage.setItem(STORAGE_PROFILES, JSON.stringify(profiles));
+    }
+    
+    function getCurrentProfile(){
+      const id = localStorage.getItem(STORAGE_CURRENT_PROFILE);
+      if (!id) return null;
+      const profiles = getAllProfiles();
+      return profiles.find(p => p.id === id) || null;
+    }
+    
+    function setCurrentProfile(profileId){
+      localStorage.setItem(STORAGE_CURRENT_PROFILE, profileId);
+      updateProfileDisplay();
+    }
+    
+    function createProfile(name){
+      const profiles = getAllProfiles();
+      const id = 'profile_' + Date.now();
+      const newProfile = {
+        id: id,
+        name: name.trim(),
+        createdAt: new Date().toISOString()
+      };
+      profiles.push(newProfile);
+      saveAllProfiles(profiles);
+      setCurrentProfile(id);
+      return newProfile;
+    }
+    
+    function deleteProfile(profileId){
+      const profiles = getAllProfiles();
+      const filtered = profiles.filter(p => p.id !== profileId);
+      saveAllProfiles(filtered);
+      
+      // Clean up profile data
+      for(let i=1; i<=90; i++){
+        localStorage.removeItem(profileKey(profileId, STORAGE_NOTES_PREFIX + i));
+      }
+      for(let w=1; w<=13; w++){
+        localStorage.removeItem(profileKey(profileId, STORAGE_GOALS_PREFIX + w));
+      }
+      localStorage.removeItem(profileKey(profileId, STORAGE_KEY_DAY));
+      localStorage.removeItem(profileKey(profileId, STORAGE_THEME));
+      
+      // Switch to another profile or show modal
+      if (filtered.length > 0){
+        setCurrentProfile(filtered[0].id);
+        renderDay(getCurrentDay());
+      } else {
+        localStorage.removeItem(STORAGE_CURRENT_PROFILE);
+        showProfileModal(true);
+      }
+    }
+    
+    function profileKey(profileId, key){
+      return `${profileId}.${key}`;
+    }
+    
+    function updateProfileDisplay(){
+      const profile = getCurrentProfile();
+      if (profile){
+        document.getElementById('currentProfile').textContent = profile.name;
+      }
+      renderProfileList();
+    }
+    
+    function renderProfileList(){
+      const profiles = getAllProfiles();
+      const current = getCurrentProfile();
+      const list = document.getElementById('profileList');
+      list.innerHTML = '';
+      
+      profiles.forEach(profile => {
+        const div = document.createElement('div');
+        div.className = 'profile-item' + (profile.id === current?.id ? ' active' : '');
+        div.textContent = profile.name;
+        div.addEventListener('click', () => {
+          setCurrentProfile(profile.id);
+          renderDay(getCurrentDay());
+          toggleProfileDropdown();
+        });
+        list.appendChild(div);
+        
+        // Add delete option (if more than 1 profile)
+        if (profiles.length > 1){
+          const delDiv = document.createElement('div');
+          delDiv.className = 'profile-item delete';
+          delDiv.textContent = '🗑️ Ta bort ' + profile.name;
+          delDiv.style.fontSize = '11px';
+          delDiv.style.paddingLeft = '24px';
+          delDiv.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm(`Ta bort profil "${profile.name}"? All data för denna profil kommer raderas.`)){
+              deleteProfile(profile.id);
+            }
+          });
+          list.appendChild(delDiv);
+        }
+      });
+    }
+    
+    function toggleProfileDropdown(){
+      document.getElementById('profileDropdown').classList.toggle('show');
+    }
+    
+    function showProfileModal(isFirst = false){
+      document.getElementById('profileModal').classList.remove('hidden');
+      document.getElementById('profileNameInput').value = '';
+      document.getElementById('profileNameInput').focus();
+      
+      if (isFirst){
+        document.getElementById('modalTitle').textContent = 'Välkommen! 👋';
+        document.getElementById('modalDesc').textContent = 'Skapa din profil för att börja programmet. Flera personer kan använda samma enhet.';
+        document.getElementById('modalCancel').classList.add('hidden');
+      } else {
+        document.getElementById('modalTitle').textContent = 'Skapa ny profil';
+        document.getElementById('modalDesc').textContent = 'Varje profil har egen progress och anteckningar.';
+        document.getElementById('modalCancel').classList.remove('hidden');
+      }
+    }
+    
+    function hideProfileModal(){
+      document.getElementById('profileModal').classList.add('hidden');
+    }
+    
+    function handleProfileCreate(){
+      const name = document.getElementById('profileNameInput').value.trim();
+      if (!name){
+        alert('Ange ett namn för profilen.');
+        return;
+      }
+      
+      createProfile(name);
+      hideProfileModal();
+      renderDay(getCurrentDay());
+    }
+
+    function generateProgram(){
+      const weeks = [
+        {phase:'Self-Perception Reset', theme:'Jag är källan – inte siffrorna'},
+        {phase:'Self-Perception Reset', theme:'Från oro → närvaro'},
+        {phase:'Belief Encoding', theme:'Jag är rikedom'},
+        {phase:'Belief Encoding', theme:'Känsla före bevis'},
+        {phase:'Belief Encoding', theme:'V2-kvot & ankare'},
+        {phase:'Belief Encoding', theme:'Synkronicitet & förtroende'},
+        {phase:'Frequency Embodiment', theme:'Rör dig som rik'},
+        {phase:'Frequency Embodiment', theme:'Wiz-30 = autopilot'},
+        {phase:'Frequency Embodiment', theme:'Miljödesign för pengar'},
+        {phase:'Frequency Embodiment', theme:'Lätthet skalar intäkter'},
+        {phase:'Integration', theme:'Nya baslinjen etableras'},
+        {phase:'Integration', theme:'Fira, förankra, förfina'}
+      ];
+
+      const mantras = {
+        reset:[
+          'Jag är medvetenheten bakom allt.',
+          'Oro är bara en gammal loop. Jag väljer överflöd.',
+          'Jag är trygg i nuet; pengar rör sig till mig.',
+          'Jag observerar – jag är inte mina tankar.'
+        ],
+        encode:[
+          'Jag är en person som pengar dras till.',
+          'Känslan är kvittot.',
+          'Jag är rikedom i rörelse.',
+          'Min närvaro skapar värde nu.'
+        ],
+        embody:[
+          'Jag rör mig som rik.',
+          'Lätthet tjänar mig ekonomiskt.',
+          'Varje handling bär min nya identitet.',
+          'Jag är standarden; pengar matchar mig.'
+        ],
+        integrate:[
+          'Detta är min nya baseline.',
+          'Jag förtjänar och tar emot.',
+          'Jag väljer ro, jag väljer rikedom.',
+          'Tacksamhet multiplicerar mitt flöde.'
+        ]
+      };
+
+      const dominoPools = {
+        reset:[
+          'Kartlägg 3 pengar-oro-triggers & skriv om dem.',
+          'Avsluta/avprenumerera på 1 negativ input.',
+          'Skriv ett "tack gamla jag"-brev (5 min).',
+          'Rensa en liten ekonomisk friktion (t.ex. onödig prenumeration).'
+        ],
+        encode:[
+          'Skriv 5 "Jag är…" med känsla och spela in röst (lyssna ikväll).',
+          'Skapa V2-bild i mobilen som bakgrund.',
+          'Testa mikromanifestation: bjud in en oväntad komplimang/möjlighet.',
+          'Formulera ditt 12-månaders "rik-ögonblick" i 3 meningar.'
+        ],
+        embody:[
+          'Gör 1 reach-out (kund, partner, vän).',
+          'Publicera 1 sak (post, inlägg, pitch, DM).',
+          'Sälj något litet idag (pilot, rådgivning, paket).',
+          'Delegera/automatisera 1 sak som dränerar energi.'
+        ],
+        integrate:[
+          'Skriv lista över nya standards (minimi-beteenden).',
+          'Fira 3 vinster – liten som stor.',
+          'Planera 30–90 dagars "wealth ops"-förbättringar.',
+          'Boka 1 belönande upplevelse för att förankra identiteten.'
+        ]
+      };
+
+      const pep = {
+        reset: [
+          'Drick kaffet som om det redan är sant. Du är större än siffrorna.',
+          'Oro är en kroppsvana – inte en framtidsprognos. Idag väljer du närvaro.',
+          'Du behöver inte jaga – du ställer in signalen. Låt möjligheter hitta dig.',
+          'Andas 4-2-6 och känn hur fältet blir tyst. Här skapas riktning.'
+        ],
+        encode: [
+          'Känslan före bevis: låt kroppen känna "redan ägt".',
+          'Affirmationer fungerar först när de känns. Välj en minnes-seger och tala därifrån.',
+          'Du är personen som pengar söker upp. Kliv in i rummet som sådan.',
+          'Öva mikromanifestation idag – låt världen nicka tillbaka.'
+        ],
+        embody: [
+          'Rör dig som rik: enkel, tydlig, generös med fokus.',
+          'Wiz-30 är din autopilot – tre små segrar räcker.',
+          'Miljö före vilja: gör det lätt att göra rätt.',
+          'Lätthet skalar intäkter. Jobba smart, inte tungt.'
+        ],
+        integrate: [
+          'Detta är din nya baseline. Låt den synas i små val.',
+          'Fira och förankra – det du firar upprepas.',
+          'Sista kilometern formar vanan. Håll rytmen mjuk och stadig.',
+          'Tacksamhet multiplicerar. Säg tack högt idag.'
+        ]
+      };
+
+      const routineByPhase = {
+        reset: [
+          '2 min still awareness: jag observerar, jag är inte mina tankar.',
+          '3 min skriv: Vad oroar mig? Hur svarar mitt rika jag?',
+          '5 min revision: spela upp en ny scen där du agerar som V2.'
+        ],
+        encode: [
+          '3 min "Jag är …" med känsla (5–7 rader).',
+          '4 min scenvisualisering: ett konkret rik-ögonblick.',
+          '2 min fysiskt ankare (hand mot hjärta + långsam andning).'
+        ],
+        embody: [
+          '1 min kaffet som ankare – "det är redan mitt".',
+          '7 min First Domino (liten handling mot intäkt).',
+          '2 min V2-kvot: 0–10, vad gjorde skillnad?'
+        ],
+        integrate: [
+          '3 min tacksamhet över bevisen du ser.',
+          '5 min förfining: vad blir min nya minimi-standard?',
+          '2 min plan för morgondagens First Domino.'
+        ]
+      };
+
+      const evening = [
+        'V2-kvot (0–10) & mikro-vinst.',
+        'Vad triggade oro? Vad väljer jag nästa gång?',
+        'Ett bevis på att flödet arbetar för mig.',
+        'En sak jag förenklar/eliminera i morgon.'
+      ];
+
+      const days = [];
+      for(let d=1; d<=90; d++){
+        const weekIndex = Math.floor((d-1)/7);
+        const wk = weeks[weekIndex];
+        let phaseKey = 'reset';
+        if (wk.phase.startsWith('Belief')) phaseKey = 'encode';
+        else if (wk.phase.startsWith('Frequency')) phaseKey = 'embody';
+        else if (wk.phase.startsWith('Integration')) phaseKey = 'integrate';
+
+        const titles = {
+          reset: ['Nollställ loopen','Närvaron leder','Du är källan','Andas, välj, skapa'],
+          encode: ['Jag är rikedom','Känslan först','V2-kroppen leder','Öva bevis'],
+          embody: ['Rör dig som rik','Wiz-30 = autopilot','Lätthet över kraft','Visa standarden'],
+          integrate: ['Baslinje','Fira & förankra','Förfina standarden','Nya du stannar']
+        };
+        const title = titles[phaseKey][d % 4];
+        const pepMsg = pep[phaseKey][d % pep[phaseKey].length];
+        const mantra = ({
+          reset: mantras.reset,
+          encode: mantras.encode,
+          embody: mantras.embody,
+          integrate: mantras.integrate
+        })[phaseKey][d % 4];
+
+        const dom = ({
+          reset: dominoPools.reset,
+          encode: dominoPools.encode,
+          embody: dominoPools.embody,
+          integrate: dominoPools.integrate
+        })[phaseKey];
+
+        days.push({
+          day: d,
+          phase: wk.phase,
+          weekTheme: wk.theme,
+          title,
+          pep: pepMsg,
+          routine: routineByPhase[phaseKey],
+          domino: [dom[d % dom.length], dom[(d+1) % dom.length], dom[(d+2) % dom.length]],
+          evening,
+          mantra
+        });
+      }
+      return days;
+    }
+
+    const PROGRAM = generateProgram();
+
+    // ---- Theme ----
+    function getWeekNumber(day){ return Math.floor((day-1)/7)+1; }
+    function goalsKey(week){ 
+      const profile = getCurrentProfile();
+      return profileKey(profile.id, STORAGE_GOALS_PREFIX + week); 
+    }
+    function notesKey(day){ 
+      const profile = getCurrentProfile();
+      return profileKey(profile.id, STORAGE_NOTES_PREFIX + day); 
+    }
+    function dayKey(){ 
+      const profile = getCurrentProfile();
+      return profileKey(profile.id, STORAGE_KEY_DAY); 
+    }
+    function themeKey(){ 
+      const profile = getCurrentProfile();
+      return profileKey(profile.id, STORAGE_THEME); 
+    }
+
+    function initTheme(){
+      const saved = localStorage.getItem(themeKey()) || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+      updateThemeIcon(saved);
+    }
+
+    function toggleTheme(){
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem(themeKey(), next);
+      updateThemeIcon(next);
+    }
+
+    function updateThemeIcon(theme){
+      document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // ---- Goals ----
+    function loadGoals(week){
+      const stored = localStorage.getItem(goalsKey(week));
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function saveGoals(week, goals){
+      localStorage.setItem(goalsKey(week), JSON.stringify(goals));
+    }
+
+    function renderGoals(week){
+      const goals = loadGoals(week);
+      const list = document.getElementById('goalList');
+      list.innerHTML = '';
+      
+      goals.forEach((goal, idx) => {
+        const li = document.createElement('li');
+        li.className = 'goal-item';
+        
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'goal-checkbox';
+        cb.checked = goal.completed;
+        cb.addEventListener('change', ()=>{
+          goals[idx].completed = cb.checked;
+          saveGoals(week, goals);
+          renderGoals(week);
+        });
+        
+        const span = document.createElement('span');
+        span.textContent = goal.text;
+        span.className = goal.completed ? 'goal-completed' : '';
+        
+        li.appendChild(cb);
+        li.appendChild(span);
+        list.appendChild(li);
+      });
+    }
+
+    function addGoal(week, text){
+      if (!text.trim()) return;
+      const goals = loadGoals(week);
+      goals.push({text: text.trim(), completed: false});
+      saveGoals(week, goals);
+      renderGoals(week);
+      document.getElementById('newGoal').value = '';
+    }
+
+    // ---- UI helpers ----
+    const el = (id)=>document.getElementById(id);
+    
+    function getCurrentDay(){
+      const v = parseInt(localStorage.getItem(dayKey()) || '1', 10);
+      return isNaN(v)?1:Math.max(1, Math.min(90, v));
+    }
+
+    function renderDay(n){
+      n = Math.max(1, Math.min(90, n));
+      localStorage.setItem(dayKey(), String(n));
+      const d = PROGRAM[n-1];
+      const week = getWeekNumber(d.day);
+      const kicker = `Dag ${d.day} • Vecka ${week} • ${d.phase}`;
+
+      el('kicker').textContent = kicker;
+      el('title').textContent = d.title;
+      el('theme').textContent = d.phase + ' • ' + d.weekTheme;
+      el('weekTheme').textContent = d.weekTheme;
+      el('pep').textContent = d.pep;
+
+      const ulR = el('routine'); ulR.innerHTML='';
+      d.routine.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulR.appendChild(li); });
+
+      const ulD = el('domino'); ulD.innerHTML='';
+      d.domino.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulD.appendChild(li); });
+
+      const ulE = el('evening'); ulE.innerHTML='';
+      d.evening.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulE.appendChild(li); });
+
+      el('mantra').textContent = d.mantra || '';
+      loadNotes(n);
+      renderGoals(week);
+    }
+
+    function nextDay(){ renderDay(getCurrentDay()+1); }
+    function prevDay(){ renderDay(getCurrentDay()-1); }
+
+    function saveNotes(day){ localStorage.setItem(notesKey(day), el('notes').value); }
+    function loadNotes(day){ el('notes').value = localStorage.getItem(notesKey(day)) || ''; }
+
+    // Export/import state (day + notes + goals)
+    function exportState(){
+      const profile = getCurrentProfile();
+      const goalData = {};
+      for(let w=1; w<=13; w++){
+        const goals = loadGoals(w);
+        if (goals.length > 0) goalData[w] = goals;
+      }
+      
+      const data = {
+        profileName: profile.name,
+        day: getCurrentDay(),
+        theme: localStorage.getItem(themeKey()) || 'dark',
+        notes: Object.fromEntries(
+          Array.from({length:90}, (_,i)=>[String(i+1), localStorage.getItem(notesKey(i+1)) || ''])
+          .filter(([,v])=>v && v.trim()!=='')
+        ),
+        goals: goalData
+      };
+      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `wizwealth90_${profile.name}_${new Date().toISOString().split('T')[0]}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importState(file){
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (data.day) localStorage.setItem(dayKey(), String(data.day));
+          if (data.theme) {
+            localStorage.setItem(themeKey(), data.theme);
+            document.documentElement.setAttribute('data-theme', data.theme);
+            updateThemeIcon(data.theme);
+          }
+          if (data.notes) {
+            Object.entries(data.notes).forEach(([k,v])=>{
+              const d = parseInt(k,10);
+              if (d>=1 && d<=90) localStorage.setItem(notesKey(d), v);
+            });
+          }
+          if (data.goals) {
+            Object.entries(data.goals).forEach(([w,goals])=>{
+              const week = parseInt(w,10);
+              if (week>=1 && week<=13) saveGoals(week, goals);
+            });
+          }
+          renderDay(getCurrentDay());
+          alert('Importerad!');
+        } catch(e){ alert('Ogiltig fil.'); }
+      };
+      reader.readAsText(file);
+    }
+
+    // Handlers
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('btnNext').addEventListener('click', nextDay);
+    document.getElementById('btnPrev').addEventListener('click', prevDay);
+    document.getElementById('btnToday').addEventListener('click', ()=>renderDay(getCurrentDay()));
+    document.getElementById('btnGoto').addEventListener('click', ()=>{
+      const n = parseInt(document.getElementById('gotoDay').value, 10);
+      if (!isNaN(n)) renderDay(n);
+    });
+    document.getElementById('btnReset').addEventListener('click', ()=>{
+      const profile = getCurrentProfile();
+      if (confirm(`Nollställ dag, tema, anteckningar och mål för ${profile.name}?`)){
+        for(let i=1;i<=90;i++) localStorage.removeItem(notesKey(i));
+        for(let w=1;w<=13;w++) localStorage.removeItem(goalsKey(w));
+        localStorage.setItem(dayKey(), '1');
+        localStorage.setItem(themeKey(), 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        updateThemeIcon('dark');
+        renderDay(1);
+      }
+    });
+    document.getElementById('btnExport').addEventListener('click', exportState);
+    document.getElementById('btnImport').addEventListener('click', ()=>document.getElementById('importFile').click());
+    document.getElementById('importFile').addEventListener('change', (e)=>{
+      const file = e.target.files[0];
+      if (file) importState(file);
+      e.target.value = '';
+    });
+    document.getElementById('btnClearNotes').addEventListener('click', ()=>{
+      if (confirm('Rensa anteckningar för denna dag?')){
+        const d = getCurrentDay();
+        localStorage.removeItem(notesKey(d));
+        loadNotes(d);
+      }
+    });
+    document.getElementById('notes').addEventListener('input', ()=>saveNotes(getCurrentDay()));
+    document.getElementById('newGoal').addEventListener('keypress', (e)=>{
+      if (e.key === 'Enter'){
+        const week = getWeekNumber(getCurrentDay());
+        addGoal(week, e.target.value);
+      }
+    });
+    
+    // Profile handlers
+    document.getElementById('profileBtn').addEventListener('click', toggleProfileDropdown);
+    document.getElementById('btnNewProfile').addEventListener('click', ()=>{
+      toggleProfileDropdown();
+      showProfileModal(false);
+    });
+    document.getElementById('modalConfirm').addEventListener('click', handleProfileCreate);
+    document.getElementById('modalCancel').addEventListener('click', hideProfileModal);
+    document.getElementById('profileNameInput').addEventListener('keypress', (e)=>{
+      if (e.key === 'Enter') handleProfileCreate();
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e)=>{
+      const dropdown = document.getElementById('profileDropdown');
+      const btn = document.getElementById('profileBtn');
+      if (!dropdown.contains(e.target) && !btn.contains(e.target)){
+        dropdown.classList.remove('show');
+      }
+    });
+
+    // Boot
+    (function init(){
+      const profile = getCurrentProfile();
+      if (!profile){
+        showProfileModal(true);
+        return;
+      }
+      
+      updateProfileDisplay();
+      initTheme();
+      if (!localStorage.getItem(dayKey())) localStorage.setItem(dayKey(), '1');
+      renderDay(getCurrentDay());
+    })();
+  </script>
+</body>
+</html>
+
