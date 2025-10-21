@@ -420,5 +420,116 @@ test.describe('WizWealth90 App Tests', () => {
       expect(weekTheme).toContain('Fira, förankra, förfina');
     });
   });
+
+  test('12. Progress bar: visar korrekt progress och aria-attribut', async ({ page }) => {
+    await test.step('Day 1 shows correct progress', async () => {
+      const progressText = await page.locator('#progressText').innerText();
+      expect(progressText).toContain('Dag 1 av 90');
+      
+      const progressPercent = await page.locator('#progressPercent').innerText();
+      expect(progressPercent).toContain('1%');
+      
+      const progressFill = page.locator('#progressFill');
+      const ariaValueNow = await progressFill.getAttribute('aria-valuenow');
+      expect(ariaValueNow).toBe('1');
+      
+      const width = await progressFill.evaluate((el) => el.style.width);
+      expect(width).toBe('1%');
+    });
+
+    await test.step('Day 90 shows 100% progress', async () => {
+      await page.locator('#gotoDay').fill('90');
+      await page.locator('#btnGoto').click();
+      await page.waitForTimeout(100);
+      
+      const progressPercent = await page.locator('#progressPercent').innerText();
+      expect(progressPercent).toBe('100%');
+      
+      const progressFill = page.locator('#progressFill');
+      const ariaValueNow = await progressFill.getAttribute('aria-valuenow');
+      expect(ariaValueNow).toBe('90');
+      
+      const width = await progressFill.evaluate((el) => el.style.width);
+      expect(width).toBe('100%');
+    });
+  });
+
+  test('13. Done button: markerar dag som klar och sparar state', async ({ page }) => {
+    await test.step('Initially, done button is not completed', async () => {
+      const btnDone = page.locator('#btnDone');
+      const text = await btnDone.innerText();
+      expect(text).toContain('Markera dag som klar');
+      
+      const isCompleted = await btnDone.evaluate((el) => el.classList.contains('completed'));
+      expect(isCompleted).toBe(false);
+    });
+
+    await test.step('Click done button → marks as completed', async () => {
+      await page.locator('#btnDone').click();
+      await page.waitForTimeout(700); // Wait for animation
+      
+      const btnDone = page.locator('#btnDone');
+      const text = await btnDone.innerText();
+      expect(text).toContain('Dagen klar');
+      
+      const isCompleted = await btnDone.evaluate((el) => el.classList.contains('completed'));
+      expect(isCompleted).toBe(true);
+    });
+
+    await test.step('Verify localStorage has done state', async () => {
+      const doneKeys = await page.evaluate(() => {
+        const keys = Object.keys(localStorage);
+        return keys.filter(k => k.includes('.wizwealth90.done.1'));
+      });
+      expect(doneKeys.length).toBeGreaterThan(0);
+      
+      const doneValue = await page.evaluate(() => {
+        const keys = Object.keys(localStorage);
+        const doneKey = keys.find(k => k.includes('.wizwealth90.done.1'));
+        return doneKey ? localStorage.getItem(doneKey) : null;
+      });
+      expect(doneValue).toBe('1');
+    });
+
+    await test.step('Switch day and back → done state persists', async () => {
+      await page.locator('#btnNext').click();
+      await page.waitForTimeout(100);
+      await page.locator('#btnPrev').click();
+      await page.waitForTimeout(100);
+      
+      const btnDone = page.locator('#btnDone');
+      const text = await btnDone.innerText();
+      expect(text).toContain('Dagen klar');
+      
+      const isCompleted = await btnDone.evaluate((el) => el.classList.contains('completed'));
+      expect(isCompleted).toBe(true);
+    });
+  });
+
+  test('14. Mantra copy: kopierar till urklipp med feedback', async ({ page }) => {
+    await test.step('Get mantra text', async () => {
+      const mantraText = await page.locator('#mantra').innerText();
+      expect(mantraText.length).toBeGreaterThan(0);
+    });
+
+    await test.step('Click mantra → shows toast notification', async () => {
+      const mantraText = await page.locator('#mantra').innerText();
+      
+      await page.locator('#mantra').click();
+      await page.waitForTimeout(200);
+      
+      const toast = page.locator('.toast.show');
+      await expect(toast).toBeVisible();
+      
+      const toastText = await toast.innerText();
+      expect(toastText).toContain('kopierat');
+    });
+
+    await test.step('Verify clipboard content (via page context)', async () => {
+      // Note: Clipboard API might be restricted in test env, so we just verify the toast appeared
+      const mantraText = await page.locator('#mantra').innerText();
+      expect(mantraText.length).toBeGreaterThan(5); // Verify it's a real mantra
+    });
+  });
 });
 

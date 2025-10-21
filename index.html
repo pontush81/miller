@@ -16,7 +16,7 @@
       --hover:#2f466b; --pill:#0f1a2a; --pillBorder:#21314b;
       --mantraBg:#10192a; --mantraBorder:#8ab4ff; --textarea:#10192a;
       --textareaBorder:#1e2b44; --badge:#10263b; --badgeBorder:#234b73;
-      --badgeText:#cde3ff;
+      --badgeText:#cde3ff; --warm:#ffd479;
     }
     [data-theme="light"] {
       --bg:#f6f8fb; --card:#ffffff; --muted:#64748b; --text:#111827;
@@ -24,7 +24,7 @@
       --hover:#cbd5e1; --pill:#f8fafc; --pillBorder:#cbd5e1;
       --mantraBg:#eff6ff; --mantraBorder:#3b82f6; --textarea:#f8fafc;
       --textareaBorder:#cbd5e1; --badge:#dbeafe; --badgeBorder:#93c5fd;
-      --badgeText:#1e40af;
+      --badgeText:#1e40af; --warm:#f59e0b;
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;transition:background 0.3s, color 0.3s;letter-spacing:0.01em}
@@ -65,7 +65,8 @@
     ul{margin:8px 0 0 18px}
     .muted{color:var(--muted)}
     .badge{display:inline-block;background:var(--badge);border:1px solid var(--badgeBorder);color:var(--badgeText);padding:3px 8px;border-radius:8px;font-size:12px}
-    .mantra{border-left:3px solid var(--mantraBorder);padding:12px 16px;background:var(--mantraBg);border-radius:12px;margin:6px 0;color:var(--text);animation:pulse 3s infinite;font-weight:500;letter-spacing:0.02em}
+    .mantra{border-left:3px solid var(--mantraBorder);padding:12px 16px;background:var(--mantraBg);border-radius:12px;margin:6px 0;color:var(--text);font-weight:500;letter-spacing:0.02em;cursor:pointer;transition:all 0.3s;animation:mantraGlow 6s ease-in-out infinite}
+    .mantra:hover{transform:scale(1.02);box-shadow:0 0 20px rgba(255,212,121,0.2)}
     .ok{color:var(--acc)}
     .danger{color:#ff8a8a}
     .hr{height:1px;background:linear-gradient(90deg, transparent, var(--border), transparent);margin:16px 0}
@@ -79,6 +80,19 @@
     @keyframes shimmer {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
+    }
+    @keyframes mantraGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,212,121,0.08); }
+      50% { box-shadow: 0 0 24px 0 rgba(255,212,121,0.14); }
+    }
+    @keyframes donePulse {
+      0% { box-shadow: 0 0 0 0 rgba(123,216,143,0); }
+      50% { box-shadow: 0 0 24px 2px rgba(123,216,143,0.25); }
+      100% { box-shadow: 0 0 0 0 rgba(123,216,143,0); }
+    }
+    @keyframes fade {
+      from { opacity:0; transform:translateY(4px); }
+      to { opacity:1; transform:translateY(0); }
     }
     
     /* Energy Symbol */
@@ -100,6 +114,18 @@
     .goal-item{display:flex;gap:8px;align-items:center;padding:6px 0;font-size:13px}
     .goal-checkbox{width:16px;height:16px;cursor:pointer}
     .goal-completed{text-decoration:line-through;opacity:0.6}
+    
+    /* Toast notifications */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;opacity:0;transition:opacity 0.3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:14px}
+    .toast.show{opacity:1}
+    
+    /* Done button */
+    #btnDone{background:var(--acc);color:var(--card);font-weight:600;margin-top:12px;width:100%;transition:all 0.3s}
+    #btnDone:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(123,216,143,0.3)}
+    #btnDone.completed{background:var(--input);color:var(--muted);cursor:default}
+    #btnDone.completed:hover{transform:none;box-shadow:none}
+    .fadeIn{animation:fade 0.25s ease}
+    .donePulse{animation:donePulse 0.6s ease}
     
     /* Profile modal */
     .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
@@ -202,8 +228,9 @@
         <ul id="domino"></ul>
         <h3>🌙 Kvällsdebrief</h3>
         <ul id="evening"></ul>
+        <button id="btnDone" aria-label="Markera dagen som klar">✨ Markera dag som klar</button>
         <h3>💬 Dagens mantra</h3>
-        <div id="mantra" class="mantra mono"></div>
+        <div id="mantra" class="mantra mono" title="Klicka för att kopiera"></div>
         <div class="footer">Din plats sparas automatiskt (lokalt i webbläsaren).</div>
       </section>
 
@@ -721,6 +748,53 @@
       document.getElementById('newGoal').value = '';
     }
 
+    // ---- Toast Notifications ----
+    function toast(msg){ 
+      let t = document.querySelector('.toast'); 
+      if(!t){ 
+        t = document.createElement('div'); 
+        t.className = 'toast'; 
+        document.body.appendChild(t); 
+      }
+      t.textContent = msg; 
+      t.classList.add('show'); 
+      setTimeout(() => t.classList.remove('show'), 1500);
+    }
+
+    // ---- Done State ----
+    function getDoneKey(day){
+      const profile = getCurrentProfile();
+      if (!profile) return null;
+      return profileKey(profile.id, 'wizwealth90.done.' + day);
+    }
+
+    function isDayDone(day){
+      const key = getDoneKey(day);
+      if (!key) return false;
+      return localStorage.getItem(key) === '1';
+    }
+
+    function markDayDone(day){
+      const key = getDoneKey(day);
+      if (!key) return;
+      localStorage.setItem(key, '1');
+    }
+
+    function updateDoneButton(day){
+      const btn = document.getElementById('btnDone');
+      if (!btn) return;
+      
+      if (isDayDone(day)){
+        btn.textContent = '✓ Dagen klar';
+        btn.classList.add('completed');
+        btn.disabled = true;
+      } else {
+        btn.textContent = '✨ Markera dag som klar';
+        btn.classList.remove('completed');
+        btn.disabled = false;
+      }
+    }
+
     // ---- UI helpers ----
     const el = (id)=>document.getElementById(id);
     
@@ -745,7 +819,12 @@
       const progress = Math.round((n / 90) * 100);
       el('progressText').textContent = `Dag ${n} av 90 • Vecka ${week}`;
       el('progressPercent').textContent = `${progress}%`;
-      el('progressFill').style.width = `${progress}%`;
+      const progressBar = el('progressFill');
+      progressBar.style.width = `${progress}%`;
+      progressBar.setAttribute('role', 'progressbar');
+      progressBar.setAttribute('aria-valuemin', '1');
+      progressBar.setAttribute('aria-valuemax', '90');
+      progressBar.setAttribute('aria-valuenow', String(n));
       
       // Energy symbol (rotate based on day)
       const energy = ENERGY_SYMBOLS[n % ENERGY_SYMBOLS.length];
@@ -782,6 +861,7 @@
       
       loadNotes(n);
       renderGoals(week);
+      updateDoneButton(n);
     }
 
     function nextDay(){ 
@@ -948,6 +1028,37 @@
       if (e.key === 'Enter'){
         const week = getWeekNumber(getCurrentDay());
         addGoal(week, e.target.value);
+      }
+    });
+    
+    // Done button handler
+    document.getElementById('btnDone').addEventListener('click', ()=>{
+      if (!getCurrentProfile()) return;
+      const day = getCurrentDay();
+      if (isDayDone(day)) return;
+      
+      markDayDone(day);
+      updateDoneButton(day);
+      
+      // Trigger animations
+      const card = document.getElementById('dayCard');
+      card.classList.add('donePulse');
+      setTimeout(() => card.classList.remove('donePulse'), 600);
+      
+      toast('✨ Dagen integrerad');
+    });
+    
+    // Mantra copy-to-clipboard
+    document.getElementById('mantra').addEventListener('click', async ()=>{
+      const mantraText = document.getElementById('mantra').textContent;
+      if (!mantraText) return;
+      
+      try {
+        await navigator.clipboard.writeText(mantraText);
+        toast('📋 Mantra kopierat');
+      } catch (err) {
+        console.error('Failed to copy:', err);
+        toast('⚠️ Kunde inte kopiera');
       }
     });
     
