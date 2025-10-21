@@ -6,6 +6,9 @@
   <title>WizWealth90 – Chris "The Wiz" Miller Program</title>
   <meta name="description" content="90-dagars Wealth Identity Program i Miller-stil">
   <meta name="theme-color" content="#0b0f16">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:#0b0f16; --card:#121826; --muted:#8ea0b5; --text:#e8eef7; 
@@ -24,32 +27,66 @@
       --badgeText:#1e40af;
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;transition:background 0.3s, color 0.3s}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 'Inter',system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;transition:background 0.3s, color 0.3s;letter-spacing:0.01em}
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(139, 180, 255, 0); }
+      50% { box-shadow: 0 0 20px 5px rgba(139, 180, 255, 0.3); }
+    }
+    @keyframes themeRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .fade-in { animation: fadeInUp 0.6s ease-out; }
     header{position:sticky;top:0;background:var(--bg);z-index:5;padding:16px 20px 8px;border-bottom:1px solid var(--border);backdrop-filter:blur(8px)}
     .header-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
     h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.2px}
     .sub{color:var(--muted);font-size:13px;margin-top:2px}
     main{max-width:920px;margin:24px auto;padding:0 16px 60px}
     .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-    button, input[type="number"], select {border:1px solid var(--border);background:var(--input);color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer;transition:border-color 0.2s}
-    button:hover{border-color:var(--hover)}
-    .theme-toggle{background:transparent;border:1px solid var(--border);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:18px}
+    button, input[type="number"], select {border:1px solid var(--border);background:var(--input);color:var(--text);padding:8px 16px;border-radius:20px;cursor:pointer;transition:all 0.3s;font-weight:500}
+    button:hover{border-color:var(--hover);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+    .theme-toggle{background:transparent;border:1px solid var(--border);padding:6px 10px;border-radius:12px;cursor:pointer;font-size:18px;transition:all 0.3s}
     .theme-toggle:hover{border-color:var(--hover);transform:scale(1.05)}
+    .theme-toggle.rotating{animation:themeRotate 0.5s ease-in-out}
     .pill{background:var(--pill);border:1px solid var(--pillBorder);border-radius:999px;padding:6px 10px;color:var(--muted);font-size:12px}
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
     @media (min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;transition:background 0.3s, border 0.3s}
-    h2{font-size:18px;margin:0 0 8px}
-    h3{font-size:15px;margin:14px 0 6px;color:var(--text);opacity:0.9}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;transition:background 0.3s, border 0.3s;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
+    h2{font-size:20px;margin:0 0 12px;font-weight:600;letter-spacing:0.02em}
+    h3{font-size:15px;margin:18px 0 10px;color:var(--text);opacity:0.9;font-weight:600;letter-spacing:0.03em}
     .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
     .big{font-size:15px}
     ul{margin:8px 0 0 18px}
     .muted{color:var(--muted)}
     .badge{display:inline-block;background:var(--badge);border:1px solid var(--badgeBorder);color:var(--badgeText);padding:3px 8px;border-radius:8px;font-size:12px}
-    .mantra{border-left:3px solid var(--mantraBorder);padding:8px 12px;background:var(--mantraBg);border-radius:8px;margin:6px 0;color:var(--text)}
+    .mantra{border-left:3px solid var(--mantraBorder);padding:12px 16px;background:var(--mantraBg);border-radius:12px;margin:6px 0;color:var(--text);animation:pulse 3s infinite;font-weight:500;letter-spacing:0.02em}
     .ok{color:var(--acc)}
     .danger{color:#ff8a8a}
-    .hr{height:1px;background:var(--border);margin:8px 0 12px}
+    .hr{height:1px;background:linear-gradient(90deg, transparent, var(--border), transparent);margin:16px 0}
+    
+    /* Progress Bar */
+    .progress-container{margin:12px 0 24px;padding:0}
+    .progress-label{font-size:12px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;font-weight:500}
+    .progress-bar{height:6px;background:var(--input);border-radius:10px;overflow:hidden;position:relative}
+    .progress-fill{height:100%;background:linear-gradient(90deg, var(--acc), var(--acc2));border-radius:10px;transition:width 0.6s ease-out;position:relative}
+    .progress-fill::after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);animation:shimmer 2s infinite}
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    /* Energy Symbol */
+    .energy-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg, rgba(123,216,143,0.1), rgba(138,180,255,0.1));border:1px solid var(--acc);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:12px}
+    .energy-symbol{font-size:20px}
+    
+    /* Wisdom Quote */
+    .wisdom-quote{background:linear-gradient(135deg, var(--mantraBg), var(--input));border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-style:italic;color:var(--text);opacity:0.9;font-size:14px;line-height:1.6}
     .footer{font-size:12px;color:var(--muted);margin-top:16px}
     .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .grow{flex:1}
@@ -106,6 +143,17 @@
     </div>
   </header>
   
+  <!-- Progress Bar -->
+  <div class="progress-container" style="max-width:920px;margin:16px auto;padding:0 16px">
+    <div class="progress-label">
+      <span id="progressText">Dag 1 av 90 • Vecka 1</span>
+      <span id="progressPercent">1%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:1%"></div>
+    </div>
+  </div>
+  
   <!-- Profile Modal -->
   <div id="profileModal" class="modal-overlay hidden">
     <div class="modal">
@@ -122,8 +170,8 @@
     <div class="toolbar row">
       <span class="pill">Kodord: <b>WizWealth90</b></span>
       <button id="btnPrev" title="Föregående dag">← Föregående</button>
-      <button id="btnToday" title="Visa sparad dag">Idag</button>
-      <button id="btnNext" class="ok" title="Nästa dag">Nästa dag →</button>
+      <button id="btnToday" style="background:var(--acc2);color:#fff;border-color:var(--acc2)" title="Visa sparad dag">Idag</button>
+      <button id="btnNext" style="background:var(--acc);color:#0b0f16;border-color:var(--acc);font-weight:600" title="Nästa dag">Nästa dag →</button>
       <div class="row">
         <label class="small muted" for="gotoDay">Gå till dag:</label>
         <input id="gotoDay" type="number" min="1" max="90" style="width:84px">
@@ -137,11 +185,16 @@
     </div>
 
     <div class="grid">
-      <section class="card" id="dayCard">
+      <section class="card fade-in" id="dayCard">
         <div class="kicker" id="kicker"></div>
         <h2 id="title"></h2>
+        <div class="energy-badge" id="energyBadge">
+          <span class="energy-symbol" id="energySymbol">⚡</span>
+          <span id="energyText">Flow</span>
+        </div>
         <div id="theme" class="badge"></div>
         <div class="hr"></div>
+        <div class="wisdom-quote" id="wisdomQuote">"You are not here to fix yourself. You are here to remember."</div>
         <div id="pep" class="big"></div>
         <h3>🕒 10–15 min: Dagens Miller-rutin</h3>
         <ul id="routine"></ul>
@@ -529,6 +582,46 @@
     }
 
     const PROGRAM = generateProgram();
+    
+    // ---- Wisdom Quotes ----
+    const WISDOM_QUOTES = [
+      "You are not here to fix yourself. You are here to remember.",
+      "Wealth is a frequency before it's a number.",
+      "Your past doesn't equal your future unless you let it.",
+      "The Universe doesn't respond to need. It responds to signal.",
+      "You don't attract what you want. You attract who you are.",
+      "Comfort is expensive. Clarity is free.",
+      "Your nervous system is your wealth ceiling.",
+      "You become the 5 identities you spend the most time in.",
+      "Manifestation without embodiment is fantasy.",
+      "Money loves speed and clarity.",
+      "Your current results are yesterday's thoughts becoming today's reality.",
+      "The gap between where you are and where you want to be is called 'practice'.",
+      "You don't need more strategy. You need more sovereignty.",
+      "Wealth is an inside job that shows up outside.",
+      "Your breakthrough is on the other side of your pattern.",
+      "Energy is currency. Spend it wisely.",
+      "What you tolerate, you teach the Universe to send you more of.",
+      "Your vibe is your tribe. Your frequency is your fortune.",
+      "The fastest way to wealth is to become the person who already has it.",
+      "You can't hustle your way into alignment.",
+      "Trust the timing. Question the fear.",
+      "Your next level requires a new level of you.",
+      "Scarcity is learned. Abundance is your natural state.",
+      "The Universe doesn't work for you. It works through you."
+    ];
+    
+    // ---- Energy Symbols ----
+    const ENERGY_SYMBOLS = [
+      {symbol: '⚡', text: 'Flow', color: 'var(--acc)'},
+      {symbol: '✨', text: 'Clarity', color: 'var(--acc2)'},
+      {symbol: '🌊', text: 'Ease', color: 'var(--acc)'},
+      {symbol: '🔥', text: 'Power', color: '#ff8a8a'},
+      {symbol: '🌙', text: 'Trust', color: 'var(--acc2)'},
+      {symbol: '💎', text: 'Value', color: 'var(--acc)'},
+      {symbol: '🎯', text: 'Focus', color: 'var(--acc2)'},
+      {symbol: '🌟', text: 'Shine', color: 'var(--acc)'}
+    ];
 
     // ---- Theme ----
     function getWeekNumber(day){ return Math.floor((day-1)/7)+1; }
@@ -563,6 +656,12 @@
     function toggleTheme(){
       const key = themeKey();
       if (!key) return;
+      
+      // Add rotation animation
+      const toggle = document.getElementById('themeToggle');
+      toggle.classList.add('rotating');
+      setTimeout(() => toggle.classList.remove('rotating'), 500);
+      
       const current = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
@@ -641,6 +740,22 @@
       const d = PROGRAM[n-1];
       const week = getWeekNumber(d.day);
       const kicker = `Dag ${d.day} • Vecka ${week} • ${d.phase}`;
+      
+      // Progress bar
+      const progress = Math.round((n / 90) * 100);
+      el('progressText').textContent = `Dag ${n} av 90 • Vecka ${week}`;
+      el('progressPercent').textContent = `${progress}%`;
+      el('progressFill').style.width = `${progress}%`;
+      
+      // Energy symbol (rotate based on day)
+      const energy = ENERGY_SYMBOLS[n % ENERGY_SYMBOLS.length];
+      el('energySymbol').textContent = energy.symbol;
+      el('energyText').textContent = energy.text;
+      el('energyBadge').style.borderColor = energy.color;
+      
+      // Wisdom quote (rotate based on day)
+      const wisdom = WISDOM_QUOTES[n % WISDOM_QUOTES.length];
+      el('wisdomQuote').textContent = `"${wisdom}"`;
 
       el('kicker').textContent = kicker;
       el('title').textContent = d.title;
@@ -658,6 +773,13 @@
       d.evening.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulE.appendChild(li); });
 
       el('mantra').textContent = d.mantra || '';
+      
+      // Trigger fade-in animation
+      const card = el('dayCard');
+      card.classList.remove('fade-in');
+      void card.offsetWidth; // Force reflow
+      card.classList.add('fade-in');
+      
       loadNotes(n);
       renderGoals(week);
     }
