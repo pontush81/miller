@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg:#0b0f16; --card:#121826; --muted:#8ea0b5; --text:#e8eef7; 
@@ -264,6 +265,130 @@
   </main>
 
   <script>
+    // ---- Supabase Configuration ----
+    const SUPABASE_URL = 'https://glqywwuchtpzehhuwbro.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdscXl3d3VjaHRwemVoaHV3YnJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5NzkxMjQsImV4cCI6MjA2OTU1NTEyNH0.XseH2QeuVShm-CEQdtvND1Yjp1IecA8Sg-dsqQMf1Qs';
+    
+    const { createClient } = window.supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // User ID management (anonymous mode)
+    function getUserId() {
+      let userId = localStorage.getItem('wizwealth90.userId');
+      if (!userId) {
+        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('wizwealth90.userId', userId);
+      }
+      return userId;
+    }
+    
+    // ---- Supabase Wrapper Functions ----
+    
+    // Daily Notes
+    async function saveNoteToSupabase(day, content) {
+      const userId = getUserId();
+      const { data, error } = await sb
+        .from('daily_notes')
+        .upsert({ 
+          user_id: userId, 
+          day: day, 
+          content: content 
+        }, { 
+          onConflict: 'user_id,day' 
+        });
+      if (error) console.error('Error saving note:', error);
+      return !error;
+    }
+    
+    async function loadNoteFromSupabase(day) {
+      const userId = getUserId();
+      const { data, error } = await sb
+        .from('daily_notes')
+        .select('content')
+        .eq('user_id', userId)
+        .eq('day', day)
+        .single();
+      if (error && error.code !== 'PGRST116') console.error('Error loading note:', error);
+      return data?.content || '';
+    }
+    
+    // Weekly Goals
+    async function saveGoalsToSupabase(week, goals) {
+      const userId = getUserId();
+      
+      // Delete existing goals for this week
+      await sb
+        .from('weekly_goals')
+        .delete()
+        .eq('user_id', userId)
+        .eq('week', week);
+      
+      // Insert new goals
+      if (goals.length > 0) {
+        const goalsData = goals.map(goal => ({
+          user_id: userId,
+          week: week,
+          goal_text: goal.text,
+          completed: goal.completed
+        }));
+        
+        const { error } = await sb
+          .from('weekly_goals')
+          .insert(goalsData);
+        
+        if (error) console.error('Error saving goals:', error);
+      }
+    }
+    
+    async function loadGoalsFromSupabase(week) {
+      const userId = getUserId();
+      const { data, error } = await sb
+        .from('weekly_goals')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('week', week)
+        .order('created_at', { ascending: true });
+      
+      if (error) {
+        console.error('Error loading goals:', error);
+        return [];
+      }
+      
+      return data.map(g => ({
+        text: g.goal_text,
+        completed: g.completed
+      }));
+    }
+    
+    // Profile Data
+    async function saveProfileToSupabase(profileData) {
+      const userId = getUserId();
+      const { data, error } = await sb
+        .from('profiles')
+        .upsert({
+          id: userId,
+          name: profileData.name,
+          current_day: profileData.currentDay,
+          theme: profileData.theme
+        }, {
+          onConflict: 'id'
+        });
+      if (error) console.error('Error saving profile:', error);
+      return !error;
+    }
+    
+    async function loadProfileFromSupabase() {
+      const userId = getUserId();
+      const { data, error } = await sb
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') console.error('Error loading profile:', error);
+      return data;
+    }
+    
     const STORAGE_PROFILES = 'wizwealth90.profiles';
     const STORAGE_CURRENT_PROFILE = 'wizwealth90.currentProfile';
     const STORAGE_KEY_DAY = 'wizwealth90.day';
@@ -355,9 +480,9 @@
         const div = document.createElement('div');
         div.className = 'profile-item' + (profile.id === current?.id ? ' active' : '');
         div.textContent = profile.name;
-        div.addEventListener('click', () => {
+        div.addEventListener('click', async () => {
           setCurrentProfile(profile.id);
-          renderDay(getCurrentDay());
+          await renderDay(getCurrentDay());
           toggleProfileDropdown();
         });
         list.appendChild(div);
@@ -406,7 +531,7 @@
       document.getElementById('profileModal').classList.add('hidden');
     }
     
-    function handleProfileCreate(){
+    async function handleProfileCreate(){
       const name = document.getElementById('profileNameInput').value.trim();
       if (!name){
         alert('Ange ett namn för profilen.');
@@ -431,7 +556,7 @@
         localStorage.setItem(key, '1');
       }
       
-      renderDay(getCurrentDay());
+      await renderDay(getCurrentDay());
     }
 
     function generateProgram(){
@@ -701,17 +826,26 @@
     }
 
     // ---- Goals ----
-    function loadGoals(week){
+    async function loadGoals(week){
+      // Try Supabase first
+      const supabGoals = await loadGoalsFromSupabase(week);
+      if (supabGoals && supabGoals.length > 0) {
+        return supabGoals;
+      }
+      
+      // Fallback to localStorage
       const stored = localStorage.getItem(goalsKey(week));
       return stored ? JSON.parse(stored) : [];
     }
 
-    function saveGoals(week, goals){
+    async function saveGoals(week, goals){
+      // Save to both Supabase and localStorage
+      await saveGoalsToSupabase(week, goals);
       localStorage.setItem(goalsKey(week), JSON.stringify(goals));
     }
 
-    function renderGoals(week){
-      const goals = loadGoals(week);
+    async function renderGoals(week){
+      const goals = await loadGoals(week);
       const list = document.getElementById('goalList');
       list.innerHTML = '';
       
@@ -723,10 +857,10 @@
         cb.type = 'checkbox';
         cb.className = 'goal-checkbox';
         cb.checked = goal.completed;
-        cb.addEventListener('change', ()=>{
+        cb.addEventListener('change', async ()=>{
           goals[idx].completed = cb.checked;
-          saveGoals(week, goals);
-          renderGoals(week);
+          await saveGoals(week, goals);
+          await renderGoals(week);
         });
         
         const span = document.createElement('span');
@@ -739,12 +873,12 @@
       });
     }
 
-    function addGoal(week, text){
+    async function addGoal(week, text){
       if (!text.trim()) return;
-      const goals = loadGoals(week);
+      const goals = await loadGoals(week);
       goals.push({text: text.trim(), completed: false});
-      saveGoals(week, goals);
-      renderGoals(week);
+      await saveGoals(week, goals);
+      await renderGoals(week);
       document.getElementById('newGoal').value = '';
     }
 
@@ -804,7 +938,7 @@
       return isNaN(v)?1:Math.max(1, Math.min(90, v));
     }
 
-    function renderDay(n){
+    async function renderDay(n){
       if (!getCurrentProfile()) return; // Guard: no profile
       
       n = Math.max(1, Math.min(90, n));
@@ -859,8 +993,8 @@
       void card.offsetWidth; // Force reflow
       card.classList.add('fade-in');
       
-      loadNotes(n);
-      renderGoals(week);
+      await loadNotes(n);
+      await renderGoals(week);
       updateDoneButton(n);
     }
 
@@ -873,13 +1007,26 @@
       renderDay(getCurrentDay()-1); 
     }
 
-    function saveNotes(day){ 
+    async function saveNotes(day){ 
+      const content = el('notes').value;
+      await saveNoteToSupabase(day, content);
+      
+      // Also save to localStorage as backup
       const key = notesKey(day);
-      if (key) localStorage.setItem(key, el('notes').value); 
+      if (key) localStorage.setItem(key, content);
     }
-    function loadNotes(day){ 
-      const key = notesKey(day);
-      el('notes').value = key ? localStorage.getItem(key) || '' : ''; 
+    
+    async function loadNotes(day){ 
+      // Try Supabase first, fallback to localStorage
+      const supabContent = await loadNoteFromSupabase(day);
+      
+      if (supabContent) {
+        el('notes').value = supabContent;
+      } else {
+        // Fallback to localStorage
+        const key = notesKey(day);
+        el('notes').value = key ? localStorage.getItem(key) || '' : '';
+      }
     }
 
     // Export/import state (day + notes + goals)
@@ -1024,10 +1171,10 @@
       }
     });
     document.getElementById('notes').addEventListener('input', ()=>saveNotes(getCurrentDay()));
-    document.getElementById('newGoal').addEventListener('keypress', (e)=>{
+    document.getElementById('newGoal').addEventListener('keypress', async (e)=>{
       if (e.key === 'Enter'){
         const week = getWeekNumber(getCurrentDay());
-        addGoal(week, e.target.value);
+        await addGoal(week, e.target.value);
       }
     });
     
@@ -1084,7 +1231,7 @@
     });
 
     // Boot
-    (function init(){
+    (async function init(){
       const profile = getCurrentProfile();
       if (!profile){
         showProfileModal(true);
@@ -1094,7 +1241,7 @@
       updateProfileDisplay();
       initTheme();
       if (!localStorage.getItem(dayKey())) localStorage.setItem(dayKey(), '1');
-      renderDay(getCurrentDay());
+      await renderDay(getCurrentDay());
     })();
   </script>
 </body>
