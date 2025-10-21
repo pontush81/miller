@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WizWealth90 – Chris "The Wiz" Miller Program</title>
-  <meta name="description" content="90-dagars Wealth Identity Program i Miller-stil">
+  <meta name="description" content="90-Day Wealth Identity Program in the style of Chris Miller">
   <meta name="theme-color" content="#0b0f16">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,8 +113,13 @@
     .goal-input{width:100%;background:var(--textarea);border:1px solid var(--textareaBorder);color:var(--text);padding:8px;border-radius:8px;font-size:13px}
     .goal-list{list-style:none;padding:0;margin:8px 0 0}
     .goal-item{display:flex;gap:8px;align-items:center;padding:6px 0;font-size:13px}
-    .goal-checkbox{width:16px;height:16px;cursor:pointer}
+    .goal-checkbox{width:16px;height:16px;cursor:pointer;flex-shrink:0}
+    .goal-text{flex:1;cursor:text;padding:2px 6px;border-radius:4px;transition:background 0.2s}
+    .goal-text:hover{background:var(--hover)}
+    .goal-text:focus{outline:none;background:var(--input);box-shadow:0 0 0 1px var(--acc2)}
     .goal-completed{text-decoration:line-through;opacity:0.6}
+    .goal-delete{background:transparent;border:none;cursor:pointer;font-size:16px;opacity:0.5;transition:all 0.2s;padding:4px;flex-shrink:0}
+    .goal-delete:hover{opacity:1;transform:scale(1.2)}
     
     /* Toast notifications */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;opacity:0;transition:opacity 0.3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:14px}
@@ -153,19 +158,19 @@
     <div class="header-row">
       <div>
         <h1>WizWealth90</h1>
-        <div class="sub">Chris "The Wiz" Miller – 90-dagars Wealth Identity Program</div>
+        <div class="sub">Chris "The Wiz" Miller – 90‑Day Wealth Identity Program</div>
       </div>
       <div class="row">
         <div class="profile-selector">
-          <button class="profile-btn" id="profileBtn" title="Byt profil">
-            👤 <span id="currentProfile">Profil</span>
+          <button class="profile-btn" id="profileBtn" title="Switch profile">
+            👤 <span id="currentProfile">Profile</span>
           </button>
           <div class="profile-dropdown" id="profileDropdown">
             <div id="profileList"></div>
-            <div class="profile-item" id="btnNewProfile" style="border-top:1px solid var(--border)">+ Ny profil</div>
+            <div class="profile-item" id="btnNewProfile" style="border-top:1px solid var(--border)">+ New profile</div>
           </div>
         </div>
-        <button class="theme-toggle" id="themeToggle" title="Byt tema">🌙</button>
+        <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
       </div>
     </div>
   </header>
@@ -173,7 +178,7 @@
   <!-- Progress Bar -->
   <div class="progress-container" style="max-width:920px;margin:16px auto;padding:0 16px">
     <div class="progress-label">
-      <span id="progressText">Dag 1 av 90 • Vecka 1</span>
+      <span id="progressText">Day 1 of 90 • Week 1</span>
       <span id="progressPercent">1%</span>
     </div>
     <div class="progress-bar">
@@ -184,31 +189,31 @@
   <!-- Profile Modal -->
   <div id="profileModal" class="modal-overlay hidden">
     <div class="modal">
-      <h2 id="modalTitle">Välkommen! 👋</h2>
-      <p id="modalDesc">Skapa din profil för att börja programmet. Flera personer kan använda samma enhet.</p>
-      <input type="text" id="profileNameInput" placeholder="Ditt namn (t.ex. Anna, Johan...)" maxlength="30">
+      <h2 id="modalTitle">Welcome! 👋</h2>
+      <p id="modalDesc">Create your profile to start the program. Multiple people can use the same device.</p>
+      <input type="text" id="profileNameInput" placeholder="Your name (e.g., Anna, John…)" maxlength="30">
       <div class="modal-buttons">
-        <button id="modalCancel" class="hidden">Avbryt</button>
-        <button id="modalConfirm" class="ok">Skapa profil</button>
+        <button id="modalCancel" class="hidden">Cancel</button>
+        <button id="modalConfirm" class="ok">Create profile</button>
       </div>
     </div>
   </div>
   <main>
     <div class="toolbar row">
-      <span class="pill">Kodord: <b>WizWealth90</b></span>
-      <button id="btnPrev" title="Föregående dag">← Föregående</button>
-      <button id="btnToday" style="background:var(--acc2);color:#fff;border-color:var(--acc2)" title="Visa sparad dag">Idag</button>
-      <button id="btnNext" style="background:var(--acc);color:#0b0f16;border-color:var(--acc);font-weight:600" title="Nästa dag">Nästa dag →</button>
+      <span class="pill">Codeword: <b>WizWealth90</b></span>
+      <button id="btnPrev" title="Previous day">← Previous</button>
+      <button id="btnToday" style="background:var(--acc2);color:#fff;border-color:var(--acc2)" title="Go to saved day">Today</button>
+      <button id="btnNext" style="background:var(--acc);color:#0b0f16;border-color:var(--acc);font-weight:600" title="Next day">Next day →</button>
       <div class="row">
-        <label class="small muted" for="gotoDay">Gå till dag:</label>
+        <label class="small muted" for="gotoDay">Go to day:</label>
         <input id="gotoDay" type="number" min="1" max="90" style="width:84px">
-        <button id="btnGoto">Gå</button>
+        <button id="btnGoto">Go</button>
       </div>
       <div class="grow"></div>
-      <button id="btnExport">Exportera</button>
+      <button id="btnExport">Export</button>
       <input id="importFile" type="file" accept="application/json" style="display:none">
-      <button id="btnImport">Importera</button>
-      <button id="btnReset" class="danger">Återställ</button>
+      <button id="btnImport">Import</button>
+      <button id="btnReset" class="danger">Reset</button>
     </div>
 
     <div class="grid">
@@ -223,42 +228,42 @@
         <div class="hr"></div>
         <div class="wisdom-quote" id="wisdomQuote">"You are not here to fix yourself. You are here to remember."</div>
         <div id="pep" class="big"></div>
-        <h3>🕒 10–15 min: Dagens Miller-rutin</h3>
+        <h3>🕒 10–15 min: Daily Miller routine</h3>
         <ul id="routine"></ul>
-        <h3>🎯 First Domino-idéer</h3>
+        <h3>🎯 First Domino ideas</h3>
         <ul id="domino"></ul>
-        <h3>🌙 Kvällsdebrief</h3>
+        <h3>🌙 Evening debrief</h3>
         <ul id="evening"></ul>
-        <button id="btnDone" aria-label="Markera dagen som klar">✨ Markera dag som klar</button>
-        <h3>💬 Dagens mantra</h3>
-        <div id="mantra" class="mantra mono" title="Klicka för att kopiera"></div>
-        <div class="footer">Din plats sparas automatiskt (lokalt i webbläsaren).</div>
+        <button id="btnDone" aria-label="Mark day as done">✨ Mark day as done</button>
+        <h3>💬 Daily mantra</h3>
+        <div id="mantra" class="mantra mono" title="Click to copy"></div>
+        <div class="footer">Your place is saved automatically (in your browser).</div>
       </section>
 
       <aside class="card">
-        <h3>📆 Veckotema</h3>
+        <h3>📆 Week theme</h3>
         <div id="weekTheme" class="big"></div>
         
         <div class="hr"></div>
-        <h3>🎯 Veckans mål</h3>
+        <h3>🎯 Weekly goals</h3>
         <div class="goal-widget">
-          <input type="text" class="goal-input" id="newGoal" placeholder="Lägg till veckans mål...">
+          <input type="text" class="goal-input" id="newGoal" placeholder="Add a weekly goal and press Enter…">
           <ul class="goal-list" id="goalList"></ul>
         </div>
         
         <div class="hr"></div>
-        <h3>🧰 Snabbverktyg</h3>
+        <h3>🧰 Quick tools</h3>
         <ul class="small">
-          <li><b>Mikro-reset (30s):</b> Andas 4-2-6 + säg "Jag väljer överflöd nu".</li>
-          <li><b>Kaffet som ankare:</b> Ta första klunken som om du redan är ekonomiskt fri.</li>
-          <li><b>Intrycksdiet:</b> 10% mindre negativ input idag.</li>
+          <li><b>Micro-reset (30s):</b> Breathe 4-2-6 + say "I choose abundance now".</li>
+          <li><b>Coffee anchor:</b> Take the first sip as if you were already financially free.</li>
+          <li><b>Input diet:</b> 10% less negative input today.</li>
         </ul>
         <div class="hr"></div>
-        <h3>📝 Anteckningar</h3>
-        <textarea id="notes" placeholder="Dina lärdomar idag..."></textarea>
+        <h3>📝 Notes</h3>
+        <textarea id="notes" placeholder="Your insights today…"></textarea>
         <div class="row small" style="margin-top:6px">
-          <div class="grow muted">Sparas automatiskt lokalt</div>
-          <button id="btnClearNotes">Rensa</button>
+          <div class="grow muted">Autosaved locally</div>
+          <button id="btnClearNotes">Clear</button>
         </div>
       </aside>
     </div>
@@ -493,12 +498,12 @@
         profiles.forEach(profile => {
           const delDiv = document.createElement('div');
           delDiv.className = 'profile-item delete';
-          delDiv.textContent = '🗑️ Ta bort ' + profile.name;
+          delDiv.textContent = '🗑️ Remove ' + profile.name;
           delDiv.style.fontSize = '11px';
           delDiv.style.paddingLeft = '24px';
           delDiv.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm(`Ta bort profil "${profile.name}"? All data för denna profil kommer raderas.`)){
+            if (confirm(`Delete profile "${profile.name}"? All data for this profile will be removed.`)){
               deleteProfile(profile.id);
             }
           });
@@ -517,12 +522,12 @@
       document.getElementById('profileNameInput').focus();
       
       if (isFirst){
-        document.getElementById('modalTitle').textContent = 'Välkommen! 👋';
-        document.getElementById('modalDesc').textContent = 'Skapa din profil för att börja programmet. Flera personer kan använda samma enhet.';
+        document.getElementById('modalTitle').textContent = 'Welcome! 👋';
+        document.getElementById('modalDesc').textContent = 'Create your profile to start the program. Multiple people can use the same device.';
         document.getElementById('modalCancel').classList.add('hidden');
       } else {
-        document.getElementById('modalTitle').textContent = 'Skapa ny profil';
-        document.getElementById('modalDesc').textContent = 'Varje profil har egen progress och anteckningar.';
+        document.getElementById('modalTitle').textContent = 'Create new profile';
+        document.getElementById('modalDesc').textContent = 'Each profile has its own progress and notes.';
         document.getElementById('modalCancel').classList.remove('hidden');
       }
     }
@@ -534,7 +539,7 @@
     async function handleProfileCreate(){
       const name = document.getElementById('profileNameInput').value.trim();
       if (!name){
-        alert('Ange ett namn för profilen.');
+        alert('Enter a name for the profile.');
         return;
       }
       
@@ -543,7 +548,7 @@
       
       // Verify profile was created
       if (!getCurrentProfile()) {
-        alert('Ett fel uppstod vid skapande av profil. Försök igen.');
+        alert('An error occurred while creating the profile. Try again.');
         return;
       }
       
@@ -561,19 +566,19 @@
 
     function generateProgram(){
       const weeks = [
-        {phase:'Self-Perception Reset', theme:'Jag är källan – inte siffrorna'},
-        {phase:'Self-Perception Reset', theme:'Från oro → närvaro'},
-        {phase:'Belief Encoding', theme:'Jag är rikedom'},
-        {phase:'Belief Encoding', theme:'Känsla före bevis'},
-        {phase:'Belief Encoding', theme:'V2-kvot & ankare'},
-        {phase:'Belief Encoding', theme:'Synkronicitet & förtroende'},
-        {phase:'Frequency Embodiment', theme:'Rör dig som rik'},
+        {phase:'Self-Perception Reset', theme:'I am the source — not the numbers'},
+        {phase:'Self-Perception Reset', theme:'From worry → presence'},
+        {phase:'Belief Encoding', theme:'I am wealth'},
+        {phase:'Belief Encoding', theme:'Feeling before evidence'},
+        {phase:'Belief Encoding', theme:'V2 score & anchors'},
+        {phase:'Belief Encoding', theme:'Synchronicity & trust'},
+        {phase:'Frequency Embodiment', theme:'Move like the wealthy'},
         {phase:'Frequency Embodiment', theme:'Wiz-30 = autopilot'},
-        {phase:'Frequency Embodiment', theme:'Miljödesign för pengar'},
-        {phase:'Frequency Embodiment', theme:'Lätthet skalar intäkter'},
-        {phase:'Integration', theme:'Nya baslinjen etableras'},
-        {phase:'Integration', theme:'Fira, förankra, förfina'},
-        {phase:'Integration', theme:'Leva den nya standarden'}  // Week 13 (dag 85-90)
+        {phase:'Frequency Embodiment', theme:'Environment design for money'},
+        {phase:'Frequency Embodiment', theme:'Ease scales revenue'},
+        {phase:'Integration', theme:'New baseline established'},
+        {phase:'Integration', theme:'Celebrate, anchor, refine'},
+        {phase:'Integration', theme:'Live the new standard'}  // Week 13 (days 85–90)
       ];
 
       const mantras = {
@@ -864,11 +869,51 @@
         });
         
         const span = document.createElement('span');
+        span.contentEditable = true;
         span.textContent = goal.text;
-        span.className = goal.completed ? 'goal-completed' : '';
+        span.className = 'goal-text ' + (goal.completed ? 'goal-completed' : '');
+        span.setAttribute('data-original', goal.text);
+        
+        // Edit on blur (when user clicks away)
+        span.addEventListener('blur', async ()=>{
+          const newText = span.textContent.trim();
+          if (newText && newText !== goal.text) {
+            goals[idx].text = newText;
+            await saveGoals(week, goals);
+            span.setAttribute('data-original', newText);
+          } else if (!newText) {
+            // Restore if empty
+            span.textContent = span.getAttribute('data-original');
+          }
+        });
+        
+        // Save on Enter, cancel on Escape
+        span.addEventListener('keydown', (e)=>{
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            span.blur();
+          } else if (e.key === 'Escape') {
+            span.textContent = span.getAttribute('data-original');
+            span.blur();
+          }
+        });
+        
+        // Delete button
+        const delBtn = document.createElement('button');
+        delBtn.className = 'goal-delete';
+        delBtn.innerHTML = '🗑️';
+        delBtn.title = 'Ta bort mål';
+        delBtn.addEventListener('click', async ()=>{
+          if (confirm('Ta bort detta mål?')) {
+            goals.splice(idx, 1);
+            await saveGoals(week, goals);
+            await renderGoals(week);
+          }
+        });
         
         li.appendChild(cb);
         li.appendChild(span);
+        li.appendChild(delBtn);
         list.appendChild(li);
       });
     }
