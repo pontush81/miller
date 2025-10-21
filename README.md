@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # WizWealth90 – Wealth Identity Program
 
 Ett 90-dagars personligt utvecklingsprogram skapat av Chris "The Wiz" Miller för att transformera din ekonomiska identitet.
@@ -11,7 +10,23 @@ Ett 90-dagars personligt utvecklingsprogram skapat av Chris "The Wiz" Miller fö
 - **Progress tracking** - Spara anteckningar och veckans mål
 - **Ljus/mörkt tema** - Välj det tema som passar dig
 - **Export/Import** - Säkerhetskopiera din progress
-- **Helt lokalt** - All data sparas i webbläsarens localStorage
+- **📱 Cloud-synk (optional)** - Migrera till Supabase för datalagring i molnet
+
+## 🔄 Två versioner
+
+### Version 1: localStorage (nuvarande)
+✅ Snabbstart - fungerar direkt  
+✅ Ingen konfiguration  
+✅ Helt gratis  
+❌ Data finns bara på EN enhet  
+❌ Försvinner om cache rensas  
+
+### Version 2: Supabase (cloud)
+✅ Cloud-lagring - säkert i databasen  
+✅ Synk mellan ALLA enheter  
+✅ Automatisk backup  
+✅ Kan dela progress  
+📖 **Se:** `SUPABASE_SETUP.md` och `MIGRATION_TO_SUPABASE.md`
 
 ## 📦 Deployment till Vercel
 
@@ -115,6 +130,3 @@ Vid problem:
 
 Skapad med ❤️ för personlig utveckling och ekonomisk transformation
 
-=======
-# miller
->>>>>>> 0ded3a9a60044d98f623f050186041a7d5872e8a
