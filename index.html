@@ -270,6 +270,7 @@
       const list = document.getElementById('profileList');
       list.innerHTML = '';
       
+      // Add profile items
       profiles.forEach(profile => {
         const div = document.createElement('div');
         div.className = 'profile-item' + (profile.id === current?.id ? ' active' : '');
@@ -280,9 +281,11 @@
           toggleProfileDropdown();
         });
         list.appendChild(div);
-        
-        // Add delete option (if more than 1 profile)
-        if (profiles.length > 1){
+      });
+      
+      // Add delete options (if more than 1 profile)
+      if (profiles.length > 1){
+        profiles.forEach(profile => {
           const delDiv = document.createElement('div');
           delDiv.className = 'profile-item delete';
           delDiv.textContent = '🗑️ Ta bort ' + profile.name;
@@ -295,8 +298,8 @@
             }
           });
           list.appendChild(delDiv);
-        }
-      });
+        });
+      }
     }
     
     function toggleProfileDropdown(){
@@ -332,6 +335,22 @@
       
       createProfile(name);
       hideProfileModal();
+      
+      // Verify profile was created
+      if (!getCurrentProfile()) {
+        alert('Ett fel uppstod vid skapande av profil. Försök igen.');
+        return;
+      }
+      
+      // Initialize app after profile creation
+      updateProfileDisplay();
+      initTheme();
+      
+      const key = dayKey();
+      if (key && !localStorage.getItem(key)) {
+        localStorage.setItem(key, '1');
+      }
+      
       renderDay(getCurrentDay());
     }
 
@@ -348,7 +367,8 @@
         {phase:'Frequency Embodiment', theme:'Miljödesign för pengar'},
         {phase:'Frequency Embodiment', theme:'Lätthet skalar intäkter'},
         {phase:'Integration', theme:'Nya baslinjen etableras'},
-        {phase:'Integration', theme:'Fira, förankra, förfina'}
+        {phase:'Integration', theme:'Fira, förankra, förfina'},
+        {phase:'Integration', theme:'Leva den nya standarden'}  // Week 13 (dag 85-90)
       ];
 
       const mantras = {
@@ -514,32 +534,39 @@
     function getWeekNumber(day){ return Math.floor((day-1)/7)+1; }
     function goalsKey(week){ 
       const profile = getCurrentProfile();
+      if (!profile) return null;
       return profileKey(profile.id, STORAGE_GOALS_PREFIX + week); 
     }
     function notesKey(day){ 
       const profile = getCurrentProfile();
+      if (!profile) return null;
       return profileKey(profile.id, STORAGE_NOTES_PREFIX + day); 
     }
     function dayKey(){ 
       const profile = getCurrentProfile();
+      if (!profile) return null;
       return profileKey(profile.id, STORAGE_KEY_DAY); 
     }
     function themeKey(){ 
       const profile = getCurrentProfile();
+      if (!profile) return null;
       return profileKey(profile.id, STORAGE_THEME); 
     }
 
     function initTheme(){
-      const saved = localStorage.getItem(themeKey()) || 'dark';
+      const key = themeKey();
+      const saved = key ? localStorage.getItem(key) || 'dark' : 'dark';
       document.documentElement.setAttribute('data-theme', saved);
       updateThemeIcon(saved);
     }
 
     function toggleTheme(){
+      const key = themeKey();
+      if (!key) return;
       const current = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem(themeKey(), next);
+      localStorage.setItem(key, next);
       updateThemeIcon(next);
     }
 
@@ -599,13 +626,18 @@
     const el = (id)=>document.getElementById(id);
     
     function getCurrentDay(){
-      const v = parseInt(localStorage.getItem(dayKey()) || '1', 10);
+      const key = dayKey();
+      const v = parseInt(key ? localStorage.getItem(key) || '1' : '1', 10);
       return isNaN(v)?1:Math.max(1, Math.min(90, v));
     }
 
     function renderDay(n){
+      if (!getCurrentProfile()) return; // Guard: no profile
+      
       n = Math.max(1, Math.min(90, n));
-      localStorage.setItem(dayKey(), String(n));
+      const key = dayKey();
+      if (key) localStorage.setItem(key, String(n));
+      
       const d = PROGRAM[n-1];
       const week = getWeekNumber(d.day);
       const kicker = `Dag ${d.day} • Vecka ${week} • ${d.phase}`;
@@ -630,27 +662,48 @@
       renderGoals(week);
     }
 
-    function nextDay(){ renderDay(getCurrentDay()+1); }
-    function prevDay(){ renderDay(getCurrentDay()-1); }
+    function nextDay(){ 
+      if (!getCurrentProfile()) return;
+      renderDay(getCurrentDay()+1); 
+    }
+    function prevDay(){ 
+      if (!getCurrentProfile()) return;
+      renderDay(getCurrentDay()-1); 
+    }
 
-    function saveNotes(day){ localStorage.setItem(notesKey(day), el('notes').value); }
-    function loadNotes(day){ el('notes').value = localStorage.getItem(notesKey(day)) || ''; }
+    function saveNotes(day){ 
+      const key = notesKey(day);
+      if (key) localStorage.setItem(key, el('notes').value); 
+    }
+    function loadNotes(day){ 
+      const key = notesKey(day);
+      el('notes').value = key ? localStorage.getItem(key) || '' : ''; 
+    }
 
     // Export/import state (day + notes + goals)
     function exportState(){
       const profile = getCurrentProfile();
+      if (!profile) {
+        alert('Ingen profil vald. Skapa en profil först.');
+        return;
+      }
+      
       const goalData = {};
       for(let w=1; w<=13; w++){
         const goals = loadGoals(w);
         if (goals.length > 0) goalData[w] = goals;
       }
       
+      const themeK = themeKey();
       const data = {
         profileName: profile.name,
         day: getCurrentDay(),
-        theme: localStorage.getItem(themeKey()) || 'dark',
+        theme: themeK ? localStorage.getItem(themeK) || 'dark' : 'dark',
         notes: Object.fromEntries(
-          Array.from({length:90}, (_,i)=>[String(i+1), localStorage.getItem(notesKey(i+1)) || ''])
+          Array.from({length:90}, (_,i)=>{
+            const key = notesKey(i+1);
+            return [String(i+1), key ? localStorage.getItem(key) || '' : ''];
+          })
           .filter(([,v])=>v && v.trim()!=='')
         ),
         goals: goalData
@@ -663,31 +716,57 @@
     }
 
     function importState(file){
+      if (!getCurrentProfile()) {
+        alert('Ingen profil vald. Skapa en profil först.');
+        return;
+      }
+      
       const reader = new FileReader();
       reader.onload = () => {
         try {
           const data = JSON.parse(reader.result);
-          if (data.day) localStorage.setItem(dayKey(), String(data.day));
-          if (data.theme) {
-            localStorage.setItem(themeKey(), data.theme);
+          
+          // Validate data
+          if (typeof data !== 'object' || !data.day) {
+            throw new Error('Invalid file format');
+          }
+          
+          if (data.day < 1 || data.day > 90) {
+            throw new Error('Invalid day number');
+          }
+          
+          const dayK = dayKey();
+          if (data.day && dayK) localStorage.setItem(dayK, String(data.day));
+          
+          const themeK = themeKey();
+          if (data.theme && themeK) {
+            localStorage.setItem(themeK, data.theme);
             document.documentElement.setAttribute('data-theme', data.theme);
             updateThemeIcon(data.theme);
           }
+          
           if (data.notes) {
             Object.entries(data.notes).forEach(([k,v])=>{
               const d = parseInt(k,10);
-              if (d>=1 && d<=90) localStorage.setItem(notesKey(d), v);
+              const noteK = notesKey(d);
+              if (d>=1 && d<=90 && noteK) {
+                localStorage.setItem(noteK, v);
+              }
             });
           }
+          
           if (data.goals) {
             Object.entries(data.goals).forEach(([w,goals])=>{
               const week = parseInt(w,10);
               if (week>=1 && week<=13) saveGoals(week, goals);
             });
           }
+          
           renderDay(getCurrentDay());
-          alert('Importerad!');
-        } catch(e){ alert('Ogiltig fil.'); }
+          alert('✅ Importerad!');
+        } catch(e){ 
+          alert('❌ Ogiltig fil: ' + e.message); 
+        }
       };
       reader.readAsText(file);
     }
@@ -703,11 +782,26 @@
     });
     document.getElementById('btnReset').addEventListener('click', ()=>{
       const profile = getCurrentProfile();
+      if (!profile) {
+        alert('Ingen profil vald.');
+        return;
+      }
+      
       if (confirm(`Nollställ dag, tema, anteckningar och mål för ${profile.name}?`)){
-        for(let i=1;i<=90;i++) localStorage.removeItem(notesKey(i));
-        for(let w=1;w<=13;w++) localStorage.removeItem(goalsKey(w));
-        localStorage.setItem(dayKey(), '1');
-        localStorage.setItem(themeKey(), 'dark');
+        for(let i=1;i<=90;i++) {
+          const noteK = notesKey(i);
+          if (noteK) localStorage.removeItem(noteK);
+        }
+        for(let w=1;w<=13;w++) {
+          const goalK = goalsKey(w);
+          if (goalK) localStorage.removeItem(goalK);
+        }
+        
+        const dayK = dayKey();
+        const themeK = themeKey();
+        if (dayK) localStorage.setItem(dayK, '1');
+        if (themeK) localStorage.setItem(themeK, 'dark');
+        
         document.documentElement.setAttribute('data-theme', 'dark');
         updateThemeIcon('dark');
         renderDay(1);
