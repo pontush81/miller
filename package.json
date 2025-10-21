@@ -5,7 +5,11 @@
   "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
   },
   "keywords": [
     "wealth",
@@ -15,6 +19,18 @@
   ],
   "author": "Chris 'The Wiz' Miller",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pontush81/miller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pontush81/miller/issues"
+  },
+  "homepage": "https://github.com/pontush81/miller#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.1",
+    "typescript": "^5.9.3"
+  }
 }
-
