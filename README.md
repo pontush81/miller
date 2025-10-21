@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # WizWealth90 – Wealth Identity Program
 
 Ett 90-dagars personligt utvecklingsprogram skapat av Chris "The Wiz" Miller för att transformera din ekonomiska identitet.
@@ -114,3 +115,6 @@ Vid problem:
 
 Skapad med ❤️ för personlig utveckling och ekonomisk transformation
 
+=======
+# miller
+>>>>>>> 0ded3a9a60044d98f623f050186041a7d5872e8a
