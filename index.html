@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>WizWealth90 – Chris "The Wiz" Miller Program</title>
   <meta name="description" content="90-Day Wealth Identity Program in the style of Chris Miller">
   <meta name="theme-color" content="#0b0f16">
@@ -160,18 +163,24 @@
     @keyframes flicker{0%,100%{opacity:1}50%{opacity:0.8}}
     
     /* V2 SCORE TRACKER */
-    .v2-score-widget{background:var(--mantraBg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
+    .v2-score-widget{background:var(--mantraBg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;transition:transform 0.2s}
     .v2-score-widget h4{margin:0 0 8px;font-size:14px;color:var(--muted)}
     .v2-score-input-group{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .v2-score-input{flex:1;appearance:none;height:8px;border-radius:10px;background:var(--input);outline:none;transition:all 0.2s}
-    .v2-score-input::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--acc);cursor:pointer;transition:all 0.2s}
-    .v2-score-input::-webkit-slider-thumb:hover{transform:scale(1.2);box-shadow:0 0 12px var(--acc)}
-    .v2-score-input::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--acc);cursor:pointer;border:none}
+    .v2-score-input{flex:1;appearance:none;height:12px;border-radius:10px;background:var(--input);outline:none;transition:all 0.2s}
+    .v2-score-input::-webkit-slider-thumb{appearance:none;width:28px;height:28px;border-radius:50%;background:var(--acc);cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .v2-score-input::-webkit-slider-thumb:hover{transform:scale(1.1);box-shadow:0 0 12px var(--acc)}
+    .v2-score-input::-webkit-slider-thumb:active{transform:scale(1.2)}
+    .v2-score-input::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--acc);cursor:pointer;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
     .v2-score-value{font-size:24px;font-weight:700;color:var(--acc);min-width:40px;text-align:center}
     .v2-sparkline{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:8px}
-    .v2-sparkline-bar{flex:1;background:var(--acc);border-radius:2px 2px 0 0;opacity:0.6;transition:all 0.2s;min-width:4px}
+    .v2-sparkline-bar{flex:1;background:var(--acc);border-radius:2px 2px 0 0;opacity:0.6;transition:all 0.2s;min-width:4px;cursor:pointer}
     .v2-sparkline-bar:hover{opacity:1;transform:scaleY(1.05)}
     .v2-sparkline-bar.today{opacity:1;background:var(--acc2);box-shadow:0 0 8px var(--acc2)}
+    @media (max-width:768px){
+      .v2-score-input{height:16px}
+      .v2-score-input::-webkit-slider-thumb{width:32px;height:32px}
+      .v2-score-input::-moz-range-thumb{width:32px;height:32px}
+    }
     
     /* SETTINGS MENU */
     .settings-menu{position:relative;display:inline-block}
@@ -199,26 +208,78 @@
     .onboarding-dot.active{background:var(--acc);width:24px;border-radius:4px}
     .onboarding-buttons{display:flex;gap:12px;justify-content:space-between;margin-top:24px}
     
-    /* MOBILE IMPROVEMENTS */
+    /* RESPONSIVE IMPROVEMENTS */
     .mobile-tabs{display:none} /* Hidden on desktop */
     
+    /* Large desktops (1440px+) */
+    @media (min-width:1440px){
+      main{max-width:1200px}
+      .card{padding:32px}
+      h2{font-size:24px}
+    }
+    
+    /* Tablets & small desktops (768px - 900px) */
     @media (max-width:900px){
       .grid{grid-template-columns:1fr}
-      .toolbar{flex-direction:column;align-items:stretch}
-      .toolbar button{width:100%}
-      .day-nav{width:100%;justify-content:center}
-      main{padding:0 12px 80px}
-      .mobile-tabs{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px;z-index:10;box-shadow:0 -4px 12px rgba(0,0,0,0.2)}
-      .mobile-tab{flex:1;text-align:center;padding:8px 4px;cursor:pointer;border-radius:8px;transition:all 0.2s;font-size:12px}
-      .mobile-tab:hover{background:var(--input)}
-      .mobile-tab.active{background:var(--acc);color:var(--card)}
-      .mobile-tab .icon{font-size:20px;display:block;margin-bottom:2px}
+      main{max-width:100%}
       aside.card{margin-top:16px}
     }
     
+    /* Tablets portrait (768px and below) */
+    @media (max-width:768px){
+      .header-row{flex-direction:column;align-items:flex-start;gap:12px}
+      .header-row > div:last-child{width:100%;justify-content:space-between}
+      .toolbar{flex-direction:column;align-items:stretch}
+      .day-nav{width:100%;justify-content:center}
+      main{padding:0 16px 80px}
+      .card{padding:20px}
+      .mobile-tabs{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 8px;z-index:10;box-shadow:0 -4px 12px rgba(0,0,0,0.2)}
+      .mobile-tab{flex:1;text-align:center;padding:12px 8px;cursor:pointer;border-radius:8px;transition:all 0.2s;font-size:13px;min-height:44px}
+      .mobile-tab:hover{background:var(--input)}
+      .mobile-tab.active{background:var(--acc);color:var(--card)}
+      .mobile-tab .icon{font-size:24px;display:block;margin-bottom:4px}
+      .settings-dropdown{right:auto;left:0}
+      .profile-dropdown{right:auto;left:0}
+    }
+    
+    /* Mobile (414px and below) */
+    @media (max-width:414px){
+      body{font-size:15px}
+      h1{font-size:18px}
+      h2{font-size:18px}
+      h3{font-size:14px}
+      .sub{font-size:12px}
+      main{padding:0 12px 80px}
+      .card{padding:16px}
+      button, input[type="number"], select{padding:12px 16px;min-height:44px}
+      .day-display{padding:12px 16px;min-height:44px}
+      .completion-item{padding:12px 8px;min-height:44px}
+      .goal-item{padding:12px 0}
+      .goal-checkbox{width:24px;height:24px}
+      .onboarding-modal{padding:20px;font-size:15px}
+      .onboarding-modal h2{font-size:20px}
+      .progress-label{font-size:13px}
+      .mobile-tab{font-size:11px;padding:10px 4px}
+      .mobile-tab .icon{font-size:20px}
+      .domino-section{padding:16px}
+      .domino-why{font-size:12px}
+    }
+    
+    /* Small mobile (375px and below) */
+    @media (max-width:375px){
+      h1{font-size:16px}
+      .card{padding:12px}
+      .streak-badge{font-size:11px;padding:4px 8px}
+      .mobile-tab{padding:8px 2px;font-size:10px}
+      .mobile-tab .icon{font-size:18px;margin-bottom:2px}
+    }
+    
     /* Toast notifications */
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;opacity:0;transition:opacity 0.3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:14px}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;opacity:0;transition:opacity 0.3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:14px;max-width:90vw}
     .toast.show{opacity:1}
+    @media (max-width:768px){
+      .toast{bottom:90px;font-size:13px;padding:8px 12px}
+    }
     
     /* Done button */
     #btnDone{background:var(--acc);color:var(--card);font-weight:600;margin:16px auto 12px;width:80%;max-width:400px;display:block;transition:all 0.3s}
@@ -1842,6 +1903,40 @@
       const week = getWeekNumber(day);
       document.getElementById('dayDisplayText').textContent = `Day ${day} of 90`;
     }
+    
+    // ---- TOOLTIP TOUCH SUPPORT ----
+    function initTooltips(){
+      document.querySelectorAll('.tooltip').forEach(tooltip => {
+        tooltip.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          const tooltiptext = tooltip.querySelector('.tooltiptext');
+          if (!tooltiptext) return;
+          
+          // Toggle visibility
+          const isVisible = tooltiptext.style.visibility === 'visible';
+          
+          // Hide all other tooltips first
+          document.querySelectorAll('.tooltiptext').forEach(t => {
+            t.style.visibility = 'hidden';
+            t.style.opacity = '0';
+          });
+          
+          // Show/hide this tooltip
+          if (!isVisible){
+            tooltiptext.style.visibility = 'visible';
+            tooltiptext.style.opacity = '1';
+          }
+        });
+      });
+      
+      // Close tooltips when clicking outside
+      document.addEventListener('click', ()=>{
+        document.querySelectorAll('.tooltiptext').forEach(t => {
+          t.style.visibility = 'hidden';
+          t.style.opacity = '0';
+        });
+      });
+    }
 
     // Boot
     (async function init(){
@@ -1854,6 +1949,7 @@
       updateProfileDisplay();
       initTheme();
       initCollapsibleSections();
+      initTooltips();
       if (!localStorage.getItem(dayKey())) localStorage.setItem(dayKey(), '1');
       await renderDay(getCurrentDay());
       updateStreakCounter();
