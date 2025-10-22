@@ -120,6 +120,8 @@
     .goal-completed{text-decoration:line-through;opacity:0.6}
     .goal-delete{background:transparent;border:none;cursor:pointer;font-size:16px;opacity:0.5;transition:all 0.2s;padding:4px;flex-shrink:0}
     .goal-delete:hover{opacity:1;transform:scale(1.2)}
+    .domino-why{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+    .domino-item{margin-bottom:8px}
     
     /* Toast notifications */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;opacity:0;transition:opacity 0.3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:14px}
@@ -659,30 +661,31 @@
         ]
       };
 
+      // Miller-toned First Dominos with one-line explanations
       const dominoPools = {
         reset:[
-          'Map 3 money-worry triggers & rewrite them.',
-          'Cancel/unsubscribe from 1 negative input.',
-          'Write a "thank you, past me" letter (5 min).',
-          'Remove one small financial friction (e.g., an unused subscription).'
+          {text:'Mute one negative input that lowers your signal.', why:'Reduce one source of worry (feed, chat, alert). Nervous system calms; clarity rises.'},
+          {text:'Write a "thank you, past me" letter (5 min).', why:'Appreciation integrates lessons so you can release the old identity.'},
+          {text:'Clear one small financial friction — open the flow.', why:'Cancel a leak (unused subscription, clutter). Action anchors a new baseline.'},
+          {text:'List three money‑worry triggers and rewrite each into safety.', why:'Reframe the story → choose safety. Safety is the wealth signal.'}
         ],
         encode:[
-          'Write 5 "I am …" lines with feeling and record your voice (listen tonight).',
-          'Create a V2 image and set it as phone background.',
-          'Try micro‑manifestation: invite an unexpected compliment/opportunity.',
-          'Write your 12‑month "wealth moment" in 3 sentences.'
+          {text:'Record five "I am …" statements with emotion; listen tonight.', why:'Your own voice trains the subconscious to accept the identity.'},
+          {text:'Create a V2 image and set it as your phone background.', why:'Constant visual exposure accelerates identity encoding.'},
+          {text:'Invite a micro‑manifestation today.', why:'Ask for one unexpected compliment/opportunity. Proof builds belief.'},
+          {text:'Describe your 12‑month "wealth moment" in three sentences.', why:'A single vivid scene gives the body something real to follow.'}
         ],
         embody:[
-          'Do 1 reach‑out (client, partner, friend).',
-          'Publish 1 thing (post, pitch, DM).',
-          'Sell something small today (pilot, advisory, package).',
-          'Delegate/automate 1 energy‑draining task.'
+          {text:'Reach out to one person (client, partner, friend).', why:'Connection expands surface area for opportunity — movement signals readiness.'},
+          {text:'Publish or share one piece of value today.', why:'Expression broadcasts frequency. The world mirrors clarity, not perfection.'},
+          {text:'Sell or offer something small — even symbolic.', why:'Exchange activates circulation; abundance loves velocity.'},
+          {text:'Delegate or automate one draining task.', why:'Removing friction raises energetic ROI; freedom creates capacity.'}
         ],
         integrate:[
-          'Write a list of new standards (minimum behaviors).',
-          'Celebrate 3 wins — small or big.',
-          'Plan 30–90 day "wealth ops" improvements.',
-          'Book 1 rewarding experience to anchor the identity.'
+          {text:'List your new non‑negotiables.', why:'Naming standards stabilizes the level — your system learns "this is normal".'},
+          {text:'Celebrate three wins — big or small.', why:'Celebration locks success into muscle memory; gratitude multiplies it.'},
+          {text:'Plan one 30–90‑day "wealth ops" upgrade.', why:'Iterating prevents contraction and invites expansion.'},
+          {text:'Book one rewarding experience to anchor identity.', why:'Pleasure confirms safety — wealth feels calm, not chaotic.'}
         ]
       };
 
@@ -1033,6 +1036,21 @@
     // ---- UI helpers ----
     const el = (id)=>document.getElementById(id);
     
+    function renderDomino(list){
+      const ul = el('domino');
+      ul.innerHTML = '';
+      list.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'domino-item';
+        li.textContent = item.text;
+        const why = document.createElement('span');
+        why.className = 'domino-why';
+        why.textContent = item.why;
+        li.appendChild(why);
+        ul.appendChild(li);
+      });
+    }
+    
     function getCurrentDay(){
       const key = dayKey();
       const v = parseInt(key ? localStorage.getItem(key) || '1' : '1', 10);
@@ -1081,8 +1099,7 @@
       const ulR = el('routine'); ulR.innerHTML='';
       d.routine.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulR.appendChild(li); });
 
-      const ulD = el('domino'); ulD.innerHTML='';
-      d.domino.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulD.appendChild(li); });
+      renderDomino(d.domino);
 
       const ulE = el('evening'); ulE.innerHTML='';
       d.evening.forEach(item=>{ const li=document.createElement('li'); li.textContent=item; ulE.appendChild(li); });
