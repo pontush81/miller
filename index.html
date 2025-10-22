@@ -59,7 +59,7 @@
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
     @media (min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
     .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;transition:background 0.3s, border 0.3s;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
-    h2{font-size:20px;margin:0 0 12px;font-weight:600;letter-spacing:0.02em}
+    h2{font-size:20px;margin:0 0 8px;font-weight:700;letter-spacing:0.02em}
     h3{font-size:15px;margin:18px 0 10px;color:var(--text);opacity:0.9;font-weight:600;letter-spacing:0.03em}
     .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
     .big{font-size:15px}
@@ -219,6 +219,7 @@
       <section class="card fade-in" id="dayCard">
         <div class="kicker" id="kicker"></div>
         <h2 id="title"></h2>
+        <p id="explain" class="muted" style="margin-top:-2px;margin-bottom:8px"></p>
         <div class="energy-badge" id="energyBadge">
           <span class="energy-symbol" id="energySymbol">⚡</span>
           <span id="energyText">Flow</span>
@@ -398,6 +399,58 @@
     const STORAGE_NOTES_PREFIX = 'wizwealth90.notes.';
     const STORAGE_THEME = 'wizwealth90.theme';
     const STORAGE_GOALS_PREFIX = 'wizwealth90.goals.';
+    
+    // --- Daily explanation templates (keeps your exact day phrases) ---
+    const EXPLAIN_BY_PHASE = {
+      reset: [
+        'Start from who you are—not what numbers say. Create from within.',
+        'Worry collapses signal; presence restores it. Evidence follows state.',
+        'Stop chasing outcomes; broadcast a clean signal and let proof appear.',
+        'Regulate first. A safe body lets wealth strategy land.'
+      ],
+      encode: [
+        'Let your body feel "already owned". Feeling is the order slip.',
+        'Identity speaks before results arrive. Lead with who you are.',
+        "Speak from a real memory of winning and let it set today's tone.",
+        'What you encode repeatedly becomes how you show up automatically.'
+      ],
+      embody: [
+        'Decide, move and communicate like the wealthy version of you.',
+        'Stack three tiny wins daily until it runs on autopilot.',
+        'Design your space and routines so the right action is the easy one.',
+        'Less friction, more throughput—ease increases capacity.'
+      ],
+      integrate: [
+        'Hold this as normal, not a spike. Baseline is the game.',
+        'Celebrate micro-proofs to lock them into your nervous system.',
+        'Tighten the behaviors you now consider your minimum standard.',
+        'Keep the identity online in small choices; it sticks.'
+      ]
+    };
+
+    const EXPLAIN_HINTS_BY_TITLE = [
+      {match:/reset|loop/i, addon:'Reset the loop by returning to presence, not panic.'},
+      {match:/presence/i,    addon:'Presence is power. Let numbers follow your state.'},
+      {match:/source/i,      addon:'You set the signal; money reflects it back.'},
+      {match:/breathe|create/i, addon:'Slow breath first; then choose the action that matches identity.'},
+      {match:/feeling/i,     addon:'Feeling is the receipt—embody it before evidence.'},
+      {match:/V2/i,          addon:'Score the V2 version of you and note what moved the number.'},
+      {match:/autopilot|Wiz-30/i, addon:'Three small wins build the autopilot you can trust.'},
+      {match:/ease/i,        addon:"Ease is not laziness; it's smart throughput."},
+      {match:/baseline|standard/i, addon:'Normalize your next level as the new minimum.'},
+      {match:/celebrate|anchor/i, addon:'What you celebrate, your body repeats.'}
+    ];
+
+    function buildExplanation(phaseKey, title){
+      const idx = Math.max(0, (title?.length || 0) % 4);
+      let base = EXPLAIN_BY_PHASE[phaseKey][idx];
+      for (const rule of EXPLAIN_HINTS_BY_TITLE) {
+        if (rule.match.test(title || '')) {
+          return base + ' ' + rule.addon;
+        }
+      }
+      return base;
+    }
     
     // ---- Profile Management ----
     function getAllProfiles(){
@@ -721,11 +774,16 @@
           integrate: dominoPools.integrate
         })[phaseKey];
 
+        const phrase = title; // keep your exact phrase as main heading
+        const explain = buildExplanation(phaseKey, title);
+
         days.push({
           day: d,
           phase: wk.phase,
           weekTheme: wk.theme,
           title,
+          phrase,
+          explain,
           pep: pepMsg,
           routine: routineByPhase[phaseKey],
           domino: [dom[d % dom.length], dom[(d+1) % dom.length], dom[(d+2) % dom.length]],
@@ -900,9 +958,9 @@
         const delBtn = document.createElement('button');
         delBtn.className = 'goal-delete';
         delBtn.innerHTML = '🗑️';
-        delBtn.title = 'Ta bort mål';
+        delBtn.title = 'Remove goal';
         delBtn.addEventListener('click', async ()=>{
-          if (confirm('Ta bort detta mål?')) {
+          if (confirm('Remove this goal?')) {
             goals.splice(idx, 1);
             await saveGoals(week, goals);
             await renderGoals(week);
@@ -1014,7 +1072,8 @@
       el('wisdomQuote').textContent = `"${wisdom}"`;
 
       el('kicker').textContent = kicker;
-      el('title').textContent = d.title;
+      el('title').textContent = d.phrase || d.title;   // show your exact phrase
+      el('explain').textContent = d.explain || '';     // show the short explanation
       el('theme').textContent = d.phase + ' • ' + d.weekTheme;
       el('weekTheme').textContent = d.weekTheme;
       el('pep').textContent = d.pep;
