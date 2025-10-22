@@ -120,8 +120,83 @@
     .goal-completed{text-decoration:line-through;opacity:0.6}
     .goal-delete{background:transparent;border:none;cursor:pointer;font-size:16px;opacity:0.5;transition:all 0.2s;padding:4px;flex-shrink:0}
     .goal-delete:hover{opacity:1;transform:scale(1.2)}
-    .domino-why{display:block;font-size:12px;color:var(--muted);margin-top:2px}
-    .domino-item{margin-bottom:8px}
+    .domino-why{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.5}
+    .domino-item{margin-bottom:12px;position:relative;padding-left:0;transition:all 0.3s}
+    .domino-item:hover .domino-why{color:var(--text);opacity:0.9}
+    
+    /* PROMINENT FIRST DOMINO SECTION */
+    .domino-section{background:linear-gradient(135deg, rgba(123,216,143,0.08), rgba(138,180,255,0.08));border:2px solid var(--acc);border-radius:16px;padding:20px;margin:20px 0;box-shadow:0 4px 20px rgba(123,216,143,0.15)}
+    .domino-section h3{margin-top:0;color:var(--acc);font-size:16px}
+    .domino-why-icon{cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--acc2);margin-left:8px;opacity:0.8;transition:all 0.2s}
+    .domino-why-icon:hover{opacity:1;transform:scale(1.05)}
+    
+    /* COLLAPSIBLE SECTIONS */
+    .collapsible-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;padding:8px 0}
+    .collapsible-header:hover h3{color:var(--acc2)}
+    .collapsible-toggle{font-size:20px;transition:transform 0.3s;color:var(--muted)}
+    .collapsible-toggle.expanded{transform:rotate(180deg)}
+    .collapsible-content{max-height:0;overflow:hidden;transition:max-height 0.3s ease-out}
+    .collapsible-content.expanded{max-height:2000px}
+    
+    /* TOOLTIPS */
+    .tooltip{position:relative;display:inline-block;border-bottom:1px dotted var(--acc2);cursor:help}
+    .tooltip .tooltiptext{visibility:hidden;width:240px;background:var(--card);color:var(--text);text-align:left;border-radius:8px;padding:10px 12px;position:absolute;z-index:1000;bottom:125%;left:50%;margin-left:-120px;opacity:0;transition:opacity 0.3s;border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:13px;line-height:1.5}
+    .tooltip .tooltiptext::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:var(--border) transparent transparent transparent}
+    .tooltip:hover .tooltiptext{visibility:visible;opacity:1}
+    
+    /* COMPLETION CHECKLIST */
+    .completion-tracker{background:var(--mantraBg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
+    .completion-tracker h4{margin:0 0 12px;font-size:14px;color:var(--muted)}
+    .completion-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px}
+    .completion-item .check{font-size:16px}
+    .completion-item.done{opacity:0.6;text-decoration:line-through}
+    .completion-item.done .check{color:var(--acc)}
+    
+    /* STREAK COUNTER */
+    .streak-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #ff6b6b, #ff8e53);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 2px 8px rgba(255,107,107,0.3)}
+    .streak-badge .flame{font-size:16px;animation:flicker 1.5s infinite}
+    @keyframes flicker{0%,100%{opacity:1}50%{opacity:0.8}}
+    
+    /* SETTINGS MENU */
+    .settings-menu{position:relative;display:inline-block}
+    .settings-btn{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:12px;cursor:pointer;font-size:16px;transition:all 0.3s}
+    .settings-btn:hover{border-color:var(--hover);transform:scale(1.05)}
+    .settings-dropdown{display:none;position:absolute;top:100%;right:0;margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;min-width:180px;box-shadow:0 8px 20px rgba(0,0,0,0.3);z-index:10}
+    .settings-dropdown.show{display:block}
+    .settings-item{padding:12px 16px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background 0.2s}
+    .settings-item:hover{background:var(--input)}
+    .settings-item:last-child{border-bottom:none}
+    .settings-item.danger:hover{background:rgba(255,138,138,0.1)}
+    
+    /* SIMPLIFIED NAVIGATION */
+    .day-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .day-display{font-size:15px;font-weight:600;padding:8px 16px;background:var(--input);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.3s}
+    .day-display:hover{border-color:var(--acc2);background:var(--hover)}
+    
+    /* ONBOARDING */
+    .onboarding-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+    .onboarding-modal{background:var(--card);border:2px solid var(--acc);border-radius:20px;padding:32px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+    .onboarding-modal h2{margin:0 0 16px;font-size:24px;color:var(--acc)}
+    .onboarding-modal p{margin:12px 0;line-height:1.7;font-size:15px}
+    .onboarding-dots{display:flex;gap:8px;justify-content:center;margin:20px 0}
+    .onboarding-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.3s}
+    .onboarding-dot.active{background:var(--acc);width:24px;border-radius:4px}
+    .onboarding-buttons{display:flex;gap:12px;justify-content:space-between;margin-top:24px}
+    
+    /* MOBILE IMPROVEMENTS */
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .toolbar{flex-direction:column;align-items:stretch}
+      .toolbar button{width:100%}
+      .day-nav{width:100%;justify-content:center}
+      main{padding:0 12px 80px}
+      .mobile-tabs{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px;z-index:10;box-shadow:0 -4px 12px rgba(0,0,0,0.2)}
+      .mobile-tab{flex:1;text-align:center;padding:8px 4px;cursor:pointer;border-radius:8px;transition:all 0.2s;font-size:12px}
+      .mobile-tab:hover{background:var(--input)}
+      .mobile-tab.active{background:var(--acc);color:var(--card)}
+      .mobile-tab .icon{font-size:20px;display:block;margin-bottom:2px}
+      aside.card{margin-top:16px}
+    }
     
     /* Toast notifications */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 16px;opacity:0;transition:opacity 0.3s;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-size:14px}
@@ -163,6 +238,10 @@
         <div class="sub">Chris "The Wiz" Miller – 90‑Day Wealth Identity Program</div>
       </div>
       <div class="row">
+        <div id="streakBadge" class="streak-badge" style="display:none">
+          <span class="flame">🔥</span>
+          <span id="streakCount">0 days</span>
+        </div>
         <div class="profile-selector">
           <button class="profile-btn" id="profileBtn" title="Switch profile">
             👤 <span id="currentProfile">Profile</span>
@@ -173,6 +252,14 @@
           </div>
         </div>
         <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+        <div class="settings-menu">
+          <button class="settings-btn" id="settingsBtn" title="Settings">⚙️</button>
+          <div class="settings-dropdown" id="settingsDropdown">
+            <div class="settings-item" id="btnExportSettings">📤 Export data</div>
+            <div class="settings-item" id="btnImportSettings">📥 Import data</div>
+            <div class="settings-item danger" id="btnResetSettings">🔄 Reset all data</div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -201,21 +288,17 @@
     </div>
   </div>
   <main>
-    <div class="toolbar row">
-      <button id="btnPrev" title="Previous day">← Previous</button>
-      <button id="btnToday" style="background:var(--acc2);color:#fff;border-color:var(--acc2)" title="Go to saved day">Today</button>
-      <button id="btnNext" style="background:var(--acc);color:#0b0f16;border-color:var(--acc);font-weight:600" title="Next day">Next day →</button>
-      <div class="row">
-        <label class="small muted" for="gotoDay">Go to day:</label>
-        <input id="gotoDay" type="number" min="1" max="90" style="width:84px">
-        <button id="btnGoto">Go</button>
+    <div class="toolbar">
+      <div class="day-nav">
+        <button id="btnPrev" title="Previous day">← Prev</button>
+        <div class="day-display" id="dayDisplay" title="Click to jump to a specific day">
+          <span id="dayDisplayText">Day 1 of 90</span>
       </div>
-      <div class="grow"></div>
-      <button id="btnExport">Export</button>
-      <input id="importFile" type="file" accept="application/json" style="display:none">
-      <button id="btnImport">Import</button>
-      <button id="btnReset" class="danger">Reset</button>
+        <button id="btnNext" style="background:var(--acc);color:#0b0f16;border-color:var(--acc);font-weight:600" title="Next day">Next →</button>
     </div>
+      <input id="gotoDay" type="number" min="1" max="90" style="display:none">
+    </div>
+    <input id="importFile" type="file" accept="application/json" style="display:none">
 
     <div class="grid">
       <section class="card fade-in" id="dayCard">
@@ -230,15 +313,58 @@
         <div class="hr"></div>
         <div class="wisdom-quote" id="wisdomQuote">"You are not here to fix yourself. You are here to remember."</div>
         <div id="pep" class="big"></div>
-        <h3>🕒 10–15 min: Daily Miller routine</h3>
-        <ul id="routine"></ul>
-        <h3>🎯 First Domino ideas</h3>
+        
+        <!-- PROMINENT FIRST DOMINO SECTION -->
+        <div class="domino-section">
+          <h3>🎯 <span class="tooltip">First Domino<span class="tooltiptext">The ONE action today that creates momentum. Small move, big impact.</span></span> ideas</h3>
         <ul id="domino"></ul>
-        <h3>🌙 Evening debrief</h3>
+        </div>
+        
+        <!-- COLLAPSIBLE ROUTINE SECTION -->
+        <div class="collapsible-header" data-section="routine">
+          <h3>🕒 10–15 min: Daily Miller routine</h3>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content" id="routineSection">
+          <ul id="routine"></ul>
+        </div>
+        
+        <!-- COLLAPSIBLE EVENING SECTION -->
+        <div class="collapsible-header" data-section="evening">
+          <h3>🌙 Evening debrief</h3>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content" id="eveningSection">
         <ul id="evening"></ul>
+        </div>
+        
+        <!-- COMPLETION TRACKER -->
+        <div class="completion-tracker">
+          <h4>Today's progress:</h4>
+          <div class="completion-item" id="completionDomino">
+            <span class="check">☐</span>
+            <span>First Domino action</span>
+          </div>
+          <div class="completion-item" id="completionRoutine">
+            <span class="check">☐</span>
+            <span>Morning routine</span>
+          </div>
+          <div class="completion-item" id="completionEvening">
+            <span class="check">☐</span>
+            <span>Evening debrief</span>
+          </div>
+        </div>
+        
         <button id="btnDone" aria-label="Mark day as done">✨ Mark day as done</button>
-        <h3>💬 Daily mantra</h3>
-        <div id="mantra" class="mantra mono" title="Click to copy"></div>
+        
+        <!-- COLLAPSIBLE MANTRA SECTION -->
+        <div class="collapsible-header" data-section="mantra">
+          <h3>💬 Daily mantra</h3>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content" id="mantraSection">
+          <div id="mantra" class="mantra mono" title="Click to copy"></div>
+        </div>
       </section>
 
       <aside class="card">
@@ -248,7 +374,7 @@
         <div class="hr"></div>
         <h3>🎯 Weekly goals</h3>
         <div class="goal-widget">
-          <input type="text" class="goal-input" id="newGoal" placeholder="Add a weekly goal and press Enter…">
+          <input type="text" class="goal-input" id="newGoal" placeholder="This week I will... (e.g., 'Reach out to 3 clients')">
           <ul class="goal-list" id="goalList"></ul>
         </div>
         
@@ -258,17 +384,52 @@
           <li><b>Micro-reset (30s):</b> Breathe 4-2-6 + say "I choose abundance now".</li>
           <li><b>Coffee anchor:</b> Take the first sip as if you were already financially free.</li>
           <li><b>Input diet:</b> 10% less negative input today.</li>
+          <li><b><span class="tooltip">V2 score<span class="tooltiptext">Version 2.0 of you - the wealthy identity you're becoming. Rate 0-10 how much you embodied it today.</span></span>:</b> How did you show up today? (0-10)</li>
         </ul>
         <div class="hr"></div>
         <h3>📝 Notes</h3>
         <textarea id="notes" placeholder="Your insights today…"></textarea>
         <div class="row small" style="margin-top:6px">
-          <div class="grow muted">Autosaved locally</div>
+          <div class="grow muted">💾 Autosaved</div>
           <button id="btnClearNotes">Clear</button>
         </div>
       </aside>
     </div>
+    
+    <!-- MOBILE TABS -->
+    <div class="mobile-tabs">
+      <div class="mobile-tab active" data-tab="today">
+        <span class="icon">📅</span>
+        <span>Today</span>
+      </div>
+      <div class="mobile-tab" data-tab="goals">
+        <span class="icon">🎯</span>
+        <span>Goals</span>
+      </div>
+      <div class="mobile-tab" data-tab="notes">
+        <span class="icon">📝</span>
+        <span>Notes</span>
+      </div>
+    </div>
   </main>
+  
+  <!-- ONBOARDING MODAL -->
+  <div id="onboardingModal" class="onboarding-overlay hidden">
+    <div class="onboarding-modal">
+      <h2 id="onboardingTitle">Welcome to WizWealth90! 🎯</h2>
+      <p id="onboardingText">This is a 90-day program to transform your wealth identity, inspired by Chris "The Wiz" Miller.</p>
+      <div class="onboarding-dots">
+        <div class="onboarding-dot active" data-slide="0"></div>
+        <div class="onboarding-dot" data-slide="1"></div>
+        <div class="onboarding-dot" data-slide="2"></div>
+        <div class="onboarding-dot" data-slide="3"></div>
+      </div>
+      <div class="onboarding-buttons">
+        <button id="onboardingSkip" style="background:transparent;color:var(--muted)">Skip</button>
+        <button id="onboardingNext" class="ok">Next →</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // ---- Supabase Configuration ----
@@ -1115,6 +1276,9 @@
       await loadNotes(n);
       await renderGoals(week);
       updateDoneButton(n);
+      updateStreakCounter();
+      updateCompletionTracker();
+      updateDayDisplay();
     }
 
     function nextDay(){ 
@@ -1243,40 +1407,6 @@
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     document.getElementById('btnNext').addEventListener('click', nextDay);
     document.getElementById('btnPrev').addEventListener('click', prevDay);
-    document.getElementById('btnToday').addEventListener('click', ()=>renderDay(getCurrentDay()));
-    document.getElementById('btnGoto').addEventListener('click', ()=>{
-      const n = parseInt(document.getElementById('gotoDay').value, 10);
-      if (!isNaN(n)) renderDay(n);
-    });
-    document.getElementById('btnReset').addEventListener('click', ()=>{
-      const profile = getCurrentProfile();
-      if (!profile) {
-        alert('No profile selected.');
-        return;
-      }
-      
-      if (confirm(`Reset day, theme, notes and goals for ${profile.name}?`)){
-        for(let i=1;i<=90;i++) {
-          const noteK = notesKey(i);
-          if (noteK) localStorage.removeItem(noteK);
-        }
-        for(let w=1;w<=13;w++) {
-          const goalK = goalsKey(w);
-          if (goalK) localStorage.removeItem(goalK);
-        }
-        
-        const dayK = dayKey();
-        const themeK = themeKey();
-        if (dayK) localStorage.setItem(dayK, '1');
-        if (themeK) localStorage.setItem(themeK, 'dark');
-        
-        document.documentElement.setAttribute('data-theme', 'dark');
-        updateThemeIcon('dark');
-        renderDay(1);
-      }
-    });
-    document.getElementById('btnExport').addEventListener('click', exportState);
-    document.getElementById('btnImport').addEventListener('click', ()=>document.getElementById('importFile').click());
     document.getElementById('importFile').addEventListener('change', (e)=>{
       const file = e.target.files[0];
       if (file) importState(file);
@@ -1305,13 +1435,14 @@
       
       markDayDone(day);
       updateDoneButton(day);
+      updateStreakCounter();
       
       // Trigger animations
       const card = document.getElementById('dayCard');
       card.classList.add('donePulse');
       setTimeout(() => card.classList.remove('donePulse'), 600);
       
-      toast('✨ Day integrated');
+      toast('✨ Day integrated! Keep the momentum going.');
     });
     
     // Mantra copy-to-clipboard
@@ -1347,7 +1478,295 @@
       if (!dropdown.contains(e.target) && !btn.contains(e.target)){
         dropdown.classList.remove('show');
       }
+      
+      // Close settings dropdown
+      const settingsDropdown = document.getElementById('settingsDropdown');
+      const settingsBtn = document.getElementById('settingsBtn');
+      if (settingsDropdown && settingsBtn && !settingsDropdown.contains(e.target) && !settingsBtn.contains(e.target)){
+        settingsDropdown.classList.remove('show');
+      }
     });
+    
+    // ---- COLLAPSIBLE SECTIONS ----
+    function initCollapsibleSections(){
+      document.querySelectorAll('.collapsible-header').forEach(header => {
+        header.addEventListener('click', ()=>{
+          const section = header.getAttribute('data-section');
+          const content = header.nextElementSibling;
+          const toggle = header.querySelector('.collapsible-toggle');
+          
+          if (content.classList.contains('expanded')){
+            content.classList.remove('expanded');
+            toggle.classList.remove('expanded');
+          } else {
+            content.classList.add('expanded');
+            toggle.classList.add('expanded');
+          }
+          
+          // Save state
+          const profile = getCurrentProfile();
+          if (profile){
+            const key = `${profile.id}.collapsed.${section}`;
+            localStorage.setItem(key, content.classList.contains('expanded') ? 'expanded' : 'collapsed');
+          }
+        });
+      });
+      
+      // Restore state
+      const profile = getCurrentProfile();
+      if (profile){
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+          const section = header.getAttribute('data-section');
+          const key = `${profile.id}.collapsed.${section}`;
+          const state = localStorage.getItem(key);
+          const content = header.nextElementSibling;
+          const toggle = header.querySelector('.collapsible-toggle');
+          
+          if (state === 'expanded' || state === null){
+            content.classList.add('expanded');
+            toggle.classList.add('expanded');
+          }
+        });
+      }
+    }
+    
+    // ---- SETTINGS MENU ----
+    document.getElementById('settingsBtn')?.addEventListener('click', ()=>{
+      document.getElementById('settingsDropdown').classList.toggle('show');
+    });
+    
+    document.getElementById('btnExportSettings')?.addEventListener('click', ()=>{
+      document.getElementById('settingsDropdown').classList.remove('show');
+      exportState();
+    });
+    
+    document.getElementById('btnImportSettings')?.addEventListener('click', ()=>{
+      document.getElementById('settingsDropdown').classList.remove('show');
+      document.getElementById('importFile').click();
+    });
+    
+    document.getElementById('btnResetSettings')?.addEventListener('click', ()=>{
+      document.getElementById('settingsDropdown').classList.remove('show');
+      const profile = getCurrentProfile();
+      if (!profile) {
+        alert('No profile selected.');
+        return;
+      }
+      
+      if (confirm(`Reset day, theme, notes and goals for ${profile.name}?`)){
+        for(let i=1;i<=90;i++) {
+          const noteK = notesKey(i);
+          if (noteK) localStorage.removeItem(noteK);
+        }
+        for(let w=1;w<=13;w++) {
+          const goalK = goalsKey(w);
+          if (goalK) localStorage.removeItem(goalK);
+        }
+        
+        const dayK = dayKey();
+        const themeK = themeKey();
+        if (dayK) localStorage.setItem(dayK, '1');
+        if (themeK) localStorage.setItem(themeK, 'dark');
+        
+        document.documentElement.setAttribute('data-theme', 'dark');
+        updateThemeIcon('dark');
+        renderDay(1);
+        toast('✅ Reset complete');
+      }
+    });
+    
+    // ---- DAY DISPLAY CLICK (simplified navigation) ----
+    document.getElementById('dayDisplay')?.addEventListener('click', ()=>{
+      const input = document.getElementById('gotoDay');
+      const day = parseInt(prompt('Go to day (1-90):', getCurrentDay()), 10);
+      if (day && day >= 1 && day <= 90) renderDay(day);
+    });
+    
+    // ---- COMPLETION TRACKER ----
+    function updateCompletionTracker(){
+      const profile = getCurrentProfile();
+      if (!profile) return;
+      
+      const day = getCurrentDay();
+      const dominoKey = `${profile.id}.completion.domino.${day}`;
+      const routineKey = `${profile.id}.completion.routine.${day}`;
+      const eveningKey = `${profile.id}.completion.evening.${day}`;
+      
+      const dominoComplete = localStorage.getItem(dominoKey) === '1';
+      const routineComplete = localStorage.getItem(routineKey) === '1';
+      const eveningComplete = localStorage.getItem(eveningKey) === '1';
+      
+      updateCompletionItem('completionDomino', dominoComplete);
+      updateCompletionItem('completionRoutine', routineComplete);
+      updateCompletionItem('completionEvening', eveningComplete);
+    }
+    
+    function updateCompletionItem(id, complete){
+      const item = document.getElementById(id);
+      if (!item) return;
+      
+      if (complete){
+        item.classList.add('done');
+        item.querySelector('.check').textContent = '✓';
+      } else {
+        item.classList.remove('done');
+        item.querySelector('.check').textContent = '☐';
+      }
+    }
+    
+    // Add click handlers for completion items
+    ['completionDomino', 'completionRoutine', 'completionEvening'].forEach(id => {
+      document.getElementById(id)?.addEventListener('click', ()=>{
+        const profile = getCurrentProfile();
+        if (!profile) return;
+        
+        const day = getCurrentDay();
+        const type = id.replace('completion', '').toLowerCase();
+        const key = `${profile.id}.completion.${type}.${day}`;
+        
+        const current = localStorage.getItem(key) === '1';
+        localStorage.setItem(key, current ? '0' : '1');
+        updateCompletionTracker();
+        toast(current ? '☐ Unchecked' : '✓ Checked');
+      });
+    });
+    
+    // ---- STREAK COUNTER ----
+    function updateStreakCounter(){
+      const profile = getCurrentProfile();
+      if (!profile) return;
+      
+      let streak = 0;
+      const today = new Date().toDateString();
+      const streakKey = `${profile.id}.streak`;
+      const lastDoneKey = `${profile.id}.lastDoneDate`;
+      
+      // Calculate streak
+      for(let i = getCurrentDay(); i >= 1; i--){
+        if (isDayDone(i)){
+          streak++;
+        } else {
+          break;
+        }
+      }
+      
+      const badge = document.getElementById('streakBadge');
+      const count = document.getElementById('streakCount');
+      
+      if (streak > 0){
+        badge.style.display = 'inline-flex';
+        count.textContent = streak === 1 ? '1 day' : `${streak} days`;
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+    
+    // ---- ONBOARDING ----
+    const onboardingSlides = [
+      {
+        title: 'Welcome to WizWealth90! 🎯',
+        text: "This is a 90-day program to transform your wealth identity, inspired by Chris 'The Wiz' Miller. Every day, you'll get practical actions to shift how you show up."
+      },
+      {
+        title: 'Focus on the First Domino 🎯',
+        text: 'Each day highlights ONE "First Domino" action - the small move that creates momentum. This is your priority. Everything else supports it.'
+      },
+      {
+        title: 'Track Your Progress ✨',
+        text: 'Use the completion checklist to track your daily actions. Mark sections as done, and watch your streak grow. Consistency beats intensity.'
+      },
+      {
+        title: 'Start Small, Build Daily 🚀',
+        text: "You don't need to do everything perfectly. Just show up, do one thing, and let the identity shift happen naturally. Ready to begin?"
+      }
+    ];
+    
+    let currentOnboardingSlide = 0;
+    
+    function showOnboarding(){
+      const hasSeenOnboarding = localStorage.getItem('wizwealth90.onboardingSeen');
+      if (hasSeenOnboarding) return;
+      
+      document.getElementById('onboardingModal').classList.remove('hidden');
+      updateOnboardingSlide();
+    }
+    
+    function updateOnboardingSlide(){
+      const slide = onboardingSlides[currentOnboardingSlide];
+      document.getElementById('onboardingTitle').textContent = slide.title;
+      document.getElementById('onboardingText').textContent = slide.text;
+      
+      // Update dots
+      document.querySelectorAll('.onboarding-dot').forEach((dot, idx) => {
+        if (idx === currentOnboardingSlide){
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+      
+      // Update button
+      const nextBtn = document.getElementById('onboardingNext');
+      if (currentOnboardingSlide === onboardingSlides.length - 1){
+        nextBtn.textContent = 'Get Started! 🎯';
+      } else {
+        nextBtn.textContent = 'Next →';
+      }
+    }
+    
+    document.getElementById('onboardingNext')?.addEventListener('click', ()=>{
+      if (currentOnboardingSlide < onboardingSlides.length - 1){
+        currentOnboardingSlide++;
+        updateOnboardingSlide();
+      } else {
+        closeOnboarding();
+      }
+    });
+    
+    document.getElementById('onboardingSkip')?.addEventListener('click', closeOnboarding);
+    
+    function closeOnboarding(){
+      document.getElementById('onboardingModal').classList.add('hidden');
+      localStorage.setItem('wizwealth90.onboardingSeen', 'true');
+      currentOnboardingSlide = 0;
+    }
+    
+    // ---- MOBILE TABS ----
+    document.querySelectorAll('.mobile-tab').forEach(tab => {
+      tab.addEventListener('click', ()=>{
+        const tabName = tab.getAttribute('data-tab');
+        
+        // Update active state
+        document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show/hide content
+        const dayCard = document.getElementById('dayCard');
+        const aside = document.querySelector('aside.card');
+        
+        if (tabName === 'today'){
+          dayCard.style.display = 'block';
+          aside.style.display = 'none';
+        } else if (tabName === 'goals'){
+          dayCard.style.display = 'none';
+          aside.style.display = 'block';
+          // Scroll to goals
+          document.querySelector('.goal-widget')?.scrollIntoView({behavior:'smooth'});
+        } else if (tabName === 'notes'){
+          dayCard.style.display = 'none';
+          aside.style.display = 'block';
+          // Scroll to notes
+          document.getElementById('notes')?.scrollIntoView({behavior:'smooth'});
+        }
+      });
+    });
+    
+    // Update day display text
+    function updateDayDisplay(){
+      const day = getCurrentDay();
+      const week = getWeekNumber(day);
+      document.getElementById('dayDisplayText').textContent = `Day ${day} of 90`;
+    }
 
     // Boot
     (async function init(){
@@ -1359,8 +1778,13 @@
       
       updateProfileDisplay();
       initTheme();
+      initCollapsibleSections();
       if (!localStorage.getItem(dayKey())) localStorage.setItem(dayKey(), '1');
       await renderDay(getCurrentDay());
+      updateStreakCounter();
+      updateCompletionTracker();
+      updateDayDisplay();
+      showOnboarding();
     })();
   </script>
 </body>
