@@ -62,8 +62,12 @@
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
     @media (min-width:900px){.grid{grid-template-columns:1.2fr .8fr}}
     .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;transition:background 0.3s, border 0.3s;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
-    h2{font-size:20px;margin:0 0 8px;font-weight:700;letter-spacing:0.02em}
-    h3{font-size:15px;margin:18px 0 10px;color:var(--text);opacity:0.9;font-weight:600;letter-spacing:0.03em}
+    h2{font-size:22px;margin:0 0 16px;font-weight:700;letter-spacing:0.02em}
+    h3{font-size:16px;margin:24px 0 12px;color:var(--text);opacity:0.9;font-weight:600;letter-spacing:0.03em}
+    @media (max-width:768px){
+      h2{font-size:20px;margin:0 0 12px}
+      h3{font-size:15px;margin:18px 0 10px}
+    }
     .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
     .big{font-size:15px}
     ul{margin:8px 0 0 18px}
@@ -127,6 +131,17 @@
     .domino-item{margin-bottom:12px;position:relative;padding-left:0;transition:all 0.3s}
     .domino-item:hover .domino-why{color:var(--text);opacity:0.9}
     
+    /* HERO BANNER FOR DAILY THEME */
+    .theme-hero{background:linear-gradient(135deg, rgba(123,216,143,0.15), rgba(138,180,255,0.15), rgba(255,107,107,0.1));border:none;border-radius:16px;padding:24px 28px;margin:16px 0;text-align:center;position:relative;overflow:hidden}
+    .theme-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.03) 50%, transparent 70%);animation:shimmer 3s infinite}
+    .theme-hero .emoji{font-size:32px;display:block;margin-bottom:8px}
+    .theme-hero .theme-text{font-size:20px;font-weight:700;color:var(--text);line-height:1.4;margin:0}
+    @media (max-width:768px){
+      .theme-hero{padding:20px}
+      .theme-hero .emoji{font-size:28px}
+      .theme-hero .theme-text{font-size:18px}
+    }
+    
     /* PROMINENT FIRST DOMINO SECTION */
     .domino-section{background:linear-gradient(135deg, rgba(123,216,143,0.08), rgba(138,180,255,0.08));border:2px solid var(--acc);border-radius:16px;padding:20px;margin:20px 0;box-shadow:0 4px 20px rgba(123,216,143,0.15)}
     .domino-section h3{margin-top:0;color:var(--acc);font-size:16px}
@@ -147,20 +162,21 @@
     .tooltip .tooltiptext::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:var(--border) transparent transparent transparent}
     .tooltip:hover .tooltiptext{visibility:visible;opacity:1}
     
-    /* COMPLETION CHECKLIST */
-    .completion-tracker{background:var(--mantraBg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0}
-    .completion-tracker h4{margin:0 0 12px;font-size:14px;color:var(--muted)}
-    .completion-item{display:flex;align-items:center;gap:8px;padding:8px;margin:2px -8px;font-size:13px;border-radius:8px;cursor:pointer;transition:all 0.2s}
-    .completion-item:hover{background:var(--hover)}
-    .completion-item .check{font-size:16px;transition:transform 0.2s}
-    .completion-item:hover .check{transform:scale(1.2)}
-    .completion-item.done{opacity:0.6;text-decoration:line-through}
-    .completion-item.done .check{color:var(--acc)}
-    
     /* STREAK COUNTER */
     .streak-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg, #ff6b6b, #ff8e53);padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 2px 8px rgba(255,107,107,0.3)}
     .streak-badge .flame{font-size:16px;animation:flicker 1.5s infinite}
     @keyframes flicker{0%,100%{opacity:1}50%{opacity:0.8}}
+    
+    /* PROGRESS CALENDAR */
+    .progress-calendar{display:grid;grid-template-columns:repeat(10, 1fr);gap:4px;margin:12px 0}
+    .progress-day{aspect-ratio:1;border-radius:6px;background:var(--input);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:1px solid var(--border)}
+    .progress-day:hover{transform:scale(1.1);z-index:1}
+    .progress-day.done{background:var(--acc);color:var(--card);border-color:var(--acc)}
+    .progress-day.current{border:2px solid var(--acc2);box-shadow:0 0 8px var(--acc2)}
+    @media (max-width:768px){
+      .progress-calendar{grid-template-columns:repeat(7, 1fr);gap:3px}
+      .progress-day{font-size:9px}
+    }
     
     /* V2 SCORE TRACKER */
     .v2-score-widget{background:var(--mantraBg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;transition:transform 0.2s}
@@ -172,10 +188,13 @@
     .v2-score-input::-webkit-slider-thumb:active{transform:scale(1.2)}
     .v2-score-input::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--acc);cursor:pointer;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
     .v2-score-value{font-size:24px;font-weight:700;color:var(--acc);min-width:40px;text-align:center}
-    .v2-sparkline{display:flex;align-items:flex-end;gap:3px;height:40px;margin-top:8px}
-    .v2-sparkline-bar{flex:1;background:var(--acc);border-radius:2px 2px 0 0;opacity:0.6;transition:all 0.2s;min-width:4px;cursor:pointer}
+    .v2-sparkline{display:flex;align-items:flex-end;gap:3px;height:40px}
+    .v2-sparkline-bar{flex:1;background:var(--acc);border-radius:2px 2px 0 0;opacity:0.8;transition:all 0.2s;min-width:4px;cursor:pointer}
     .v2-sparkline-bar:hover{opacity:1;transform:scaleY(1.05)}
-    .v2-sparkline-bar.today{opacity:1;background:var(--acc2);box-shadow:0 0 8px var(--acc2)}
+    .v2-sparkline-bar.today{opacity:1;box-shadow:0 0 8px rgba(0,0,0,0.3)}
+    .v2-sparkline-bar.low{background:#e74c3c}
+    .v2-sparkline-bar.medium{background:#f39c12}
+    .v2-sparkline-bar.high{background:var(--acc)}
     @media (max-width:768px){
       .v2-score-input{height:16px}
       .v2-score-input::-webkit-slider-thumb{width:32px;height:32px}
@@ -184,8 +203,9 @@
     
     /* SETTINGS MENU */
     .settings-menu{position:relative;display:inline-block}
-    .settings-btn{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:12px;cursor:pointer;font-size:16px;transition:all 0.3s}
-    .settings-btn:hover{border-color:var(--hover);transform:scale(1.05)}
+    .settings-btn{background:transparent;border:1px solid var(--border);padding:8px 12px;border-radius:12px;cursor:pointer;font-size:16px;transition:all 0.3s;animation:settingsPulse 3s ease-in-out infinite}
+    .settings-btn:hover{border-color:var(--hover);transform:scale(1.05);animation:none}
+    @keyframes settingsPulse{0%,100%{opacity:1}50%{opacity:0.6;transform:scale(1.05)}}
     .settings-dropdown{display:none;position:absolute;top:100%;right:0;margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;min-width:180px;box-shadow:0 8px 20px rgba(0,0,0,0.3);z-index:10}
     .settings-dropdown.show{display:block}
     .settings-item{padding:12px 16px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background 0.2s}
@@ -384,7 +404,13 @@
         <div class="kicker" id="kicker"></div>
         <h2 id="title"></h2>
         <p id="explain" class="muted" style="margin-top:-2px;margin-bottom:8px"></p>
-        <div id="theme" class="badge"></div>
+        
+        <!-- HERO BANNER FOR DAILY THEME -->
+        <div class="theme-hero">
+          <span class="emoji" id="themeEmoji">🎯</span>
+          <p class="theme-text" id="themeText">Loading theme...</p>
+        </div>
+        
         <div class="hr"></div>
         
         <!-- COLLAPSIBLE WISDOM QUOTE -->
@@ -400,8 +426,15 @@
         
         <!-- PROMINENT FIRST DOMINO SECTION -->
         <div class="domino-section">
-          <h3>🎯 <span class="tooltip">First Domino<span class="tooltiptext">The ONE action today that creates momentum. Small move, big impact.</span></span> ideas</h3>
-        <ul id="domino"></ul>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 style="margin:0">🎯 <span class="tooltip">First Domino<span class="tooltiptext">The ONE action today that creates momentum. Small move, big impact.</span></span></h3>
+            <div style="color:var(--muted);font-size:12px" id="dominoIndicator">1/3</div>
+          </div>
+          <div id="dominoContent" style="min-height:80px"></div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button id="btnDominoPrev" style="flex:1;padding:8px">← Prev</button>
+            <button id="btnDominoNext" style="flex:1;padding:8px;background:var(--acc);color:var(--card);border-color:var(--acc)">Next →</button>
+          </div>
         </div>
         
         <!-- COLLAPSIBLE ROUTINE SECTION -->
@@ -422,24 +455,7 @@
         <ul id="evening"></ul>
         </div>
         
-        <!-- COMPLETION TRACKER -->
-        <div class="completion-tracker">
-          <h4>Today's progress:</h4>
-          <div class="completion-item" id="completionDomino">
-            <span class="check">☐</span>
-            <span>First Domino action</span>
-          </div>
-          <div class="completion-item" id="completionRoutine">
-            <span class="check">☐</span>
-            <span>Morning routine</span>
-          </div>
-          <div class="completion-item" id="completionEvening">
-            <span class="check">☐</span>
-            <span>Evening debrief</span>
-          </div>
-        </div>
-        
-        <button id="btnDone" aria-label="Mark day as done">✨ Mark day as done</button>
+        <button id="btnDone" aria-label="Mark day as complete and save notes">💾 Mark complete & save notes</button>
         
         <!-- COLLAPSIBLE MANTRA SECTION -->
         <div class="collapsible-header" data-section="mantra">
@@ -465,19 +481,26 @@
         <div class="hr"></div>
         <h3><span class="tooltip">V2 Score<span class="tooltiptext">Version 2.0 of you - the wealthy identity you're becoming. Rate 0-10 how much you embodied it today.</span></span></h3>
         <div class="v2-score-widget">
-          <h4>How did you show up today?</h4>
+          <h4>V2 Score (0-10): Vitality & Vision</h4>
           <div class="v2-score-input-group">
             <input type="range" id="v2ScoreInput" class="v2-score-input" min="0" max="10" value="5" step="1">
             <div class="v2-score-value" id="v2ScoreValue">5</div>
           </div>
-          <div class="v2-sparkline" id="v2Sparkline"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="v2-sparkline" id="v2Sparkline" style="flex:1"></div>
+            <div id="v2Average" style="font-size:12px;color:var(--muted);margin-left:12px;min-width:60px;text-align:right"></div>
+          </div>
         </div>
         
         <div class="hr"></div>
+        <h3>📊 Progress Overview</h3>
+        <div class="progress-calendar" id="progressCalendar"></div>
+        
+        <div class="hr"></div>
         <h3>📝 Notes</h3>
-        <textarea id="notes" placeholder="Your insights today…"></textarea>
+        <textarea id="notes" placeholder="Reflect on today... What went well?" maxlength="500"></textarea>
         <div class="row small" style="margin-top:6px">
-          <div class="grow muted">💾 Autosaved</div>
+          <div class="grow muted"><span id="charCount">0</span>/500 • 💾 Autosaved</div>
           <button id="btnClearNotes">Clear</button>
         </div>
         
@@ -1280,20 +1303,53 @@
     // ---- UI helpers ----
     const el = (id)=>document.getElementById(id);
     
+    let currentDominoIndex = 0;
+    let currentDominoList = [];
+    
     function renderDomino(list){
-      const ul = el('domino');
-      ul.innerHTML = '';
-      list.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'domino-item';
-        li.textContent = item.text;
-        const why = document.createElement('span');
-        why.className = 'domino-why';
-        why.textContent = item.why;
-        li.appendChild(why);
-        ul.appendChild(li);
-      });
+      currentDominoList = list;
+      currentDominoIndex = 0;
+      updateDominoDisplay();
     }
+    
+    function updateDominoDisplay(){
+      const content = document.getElementById('dominoContent');
+      const indicator = document.getElementById('dominoIndicator');
+      const prevBtn = document.getElementById('btnDominoPrev');
+      const nextBtn = document.getElementById('btnDominoNext');
+      
+      if (!content || currentDominoList.length === 0) return;
+      
+      const item = currentDominoList[currentDominoIndex];
+      content.innerHTML = `
+        <div style="font-size:15px;font-weight:600;margin-bottom:8px">${item.text}</div>
+        <div class="domino-why">${item.why}</div>
+      `;
+      
+      // Update indicator
+      if (indicator){
+        indicator.textContent = `${currentDominoIndex + 1}/${currentDominoList.length}`;
+      }
+      
+      // Update button states
+      if (prevBtn) prevBtn.disabled = currentDominoIndex === 0;
+      if (nextBtn) nextBtn.disabled = currentDominoIndex === currentDominoList.length - 1;
+    }
+    
+    // Domino navigation handlers
+    document.getElementById('btnDominoPrev')?.addEventListener('click', ()=>{
+      if (currentDominoIndex > 0){
+        currentDominoIndex--;
+        updateDominoDisplay();
+      }
+    });
+    
+    document.getElementById('btnDominoNext')?.addEventListener('click', ()=>{
+      if (currentDominoIndex < currentDominoList.length - 1){
+        currentDominoIndex++;
+        updateDominoDisplay();
+      }
+    });
     
     function getCurrentDay(){
       const key = dayKey();
@@ -1330,7 +1386,16 @@
       el('kicker').textContent = kicker;
       el('title').textContent = d.phrase || d.title;   // show your exact phrase
       el('explain').textContent = d.explain || '';     // show the short explanation
-      el('theme').textContent = d.phase + ' • ' + d.weekTheme;
+      
+      // Hero banner theme
+      const phaseEmojis = {
+        'CALIBRATION':'🎯',
+        'SATISFACTION RESET':'✨',
+        'DAILY MILLER ROUTINE':'🔄'
+      };
+      el('themeEmoji').textContent = phaseEmojis[d.phase] || '🌟';
+      el('themeText').textContent = d.weekTheme;
+      
       el('weekTheme').textContent = d.weekTheme;
       el('pep').textContent = d.pep;
 
@@ -1354,9 +1419,9 @@
       await renderGoals(week);
       updateDoneButton(n);
       updateStreakCounter();
-      updateCompletionTracker();
       updateDayDisplay();
       loadV2ScoreForDay(n);
+      renderProgressCalendar();
     }
 
     function nextDay(){ 
@@ -1388,6 +1453,9 @@
         const key = notesKey(day);
         el('notes').value = key ? localStorage.getItem(key) || '' : '';
       }
+      
+      // Update character count
+      document.getElementById('charCount').textContent = el('notes').value.length;
     }
 
     // Export/import state (day + notes + goals)
@@ -1497,7 +1565,10 @@
         loadNotes(d);
       }
     });
-    document.getElementById('notes').addEventListener('input', ()=>saveNotes(getCurrentDay()));
+    document.getElementById('notes').addEventListener('input', (e)=>{
+      saveNotes(getCurrentDay());
+      document.getElementById('charCount').textContent = e.target.value.length;
+    });
     document.getElementById('newGoal').addEventListener('keypress', async (e)=>{
       if (e.key === 'Enter'){
         const week = getWeekNumber(getCurrentDay());
@@ -1514,13 +1585,14 @@
       markDayDone(day);
       updateDoneButton(day);
       updateStreakCounter();
+      renderProgressCalendar();
       
       // Trigger animations
       const card = document.getElementById('dayCard');
       card.classList.add('donePulse');
       setTimeout(() => card.classList.remove('donePulse'), 600);
       
-      toast('✨ Day integrated! Keep the momentum going.');
+      toast(`✅ Day ${day} saved! All notes and progress stored.`);
     });
     
     // Mantra copy-to-clipboard
@@ -1590,8 +1662,9 @@
         });
       });
       
-      // Restore state
+      // Restore state (or set smart defaults)
       const profile = getCurrentProfile();
+      const currentDay = getCurrentDay();
       if (profile){
         document.querySelectorAll('.collapsible-header').forEach(header => {
           const section = header.getAttribute('data-section');
@@ -1600,7 +1673,17 @@
           const content = header.nextElementSibling;
           const toggle = header.querySelector('.collapsible-toggle');
           
-          if (state === 'expanded' || state === null){
+          // Smart defaults after day 7
+          let shouldExpand = true;
+          if (state === null && currentDay > 7 && (section === 'routine' || section === 'evening')){
+            shouldExpand = false; // Auto-collapse routine/evening after day 7
+          } else if (state === 'expanded' || state === null){
+            shouldExpand = true;
+          } else {
+            shouldExpand = false;
+          }
+          
+          if (shouldExpand){
             content.classList.add('expanded');
             toggle.classList.add('expanded');
           }
@@ -1627,20 +1710,39 @@
     
     function renderV2Sparkline(){
       const sparkline = document.getElementById('v2Sparkline');
+      const avgEl = document.getElementById('v2Average');
       if (!sparkline) return;
       
       sparkline.innerHTML = '';
       const currentDay = getCurrentDay();
       const startDay = Math.max(1, currentDay - 6); // Last 7 days
       
+      let total = 0;
+      let count = 0;
+      
       for(let day = startDay; day <= currentDay; day++){
         const score = loadV2Score(day);
         const bar = document.createElement('div');
         bar.className = 'v2-sparkline-bar';
+        
+        // Color coding
+        if (score < 4) bar.classList.add('low');
+        else if (score >= 4 && score <= 6) bar.classList.add('medium');
+        else bar.classList.add('high');
+        
         if (day === currentDay) bar.classList.add('today');
         bar.style.height = `${(score / 10) * 100}%`;
         bar.title = `Day ${day}: ${score}/10`;
         sparkline.appendChild(bar);
+        
+        total += score;
+        count++;
+      }
+      
+      // Update average
+      if (avgEl && count > 0){
+        const avg = (total / count).toFixed(1);
+        avgEl.textContent = `Avg: ${avg}`;
       }
     }
     
@@ -1664,6 +1766,38 @@
       if (input) input.value = score;
       if (value) value.textContent = score;
       renderV2Sparkline();
+    }
+    
+    // ---- PROGRESS CALENDAR ----
+    function renderProgressCalendar(){
+      const calendar = document.getElementById('progressCalendar');
+      if (!calendar) return;
+      
+      calendar.innerHTML = '';
+      const currentDay = getCurrentDay();
+      
+      for(let day = 1; day <= 90; day++){
+        const dayEl = document.createElement('div');
+        dayEl.className = 'progress-day';
+        dayEl.textContent = day;
+        dayEl.title = `Day ${day}`;
+        
+        if (isDayDone(day)){
+          dayEl.classList.add('done');
+          dayEl.title += ' ✓ Done';
+        }
+        
+        if (day === currentDay){
+          dayEl.classList.add('current');
+          dayEl.title += ' (Today)';
+        }
+        
+        dayEl.addEventListener('click', ()=>{
+          renderDay(day);
+        });
+        
+        calendar.appendChild(dayEl);
+      }
     }
     
     // ---- SETTINGS MENU ----
@@ -1718,55 +1852,6 @@
       if (day && day >= 1 && day <= 90) renderDay(day);
     });
     
-    // ---- COMPLETION TRACKER ----
-    function updateCompletionTracker(){
-      const profile = getCurrentProfile();
-      if (!profile) return;
-      
-      const day = getCurrentDay();
-      const dominoKey = `${profile.id}.completion.domino.${day}`;
-      const routineKey = `${profile.id}.completion.routine.${day}`;
-      const eveningKey = `${profile.id}.completion.evening.${day}`;
-      
-      const dominoComplete = localStorage.getItem(dominoKey) === '1';
-      const routineComplete = localStorage.getItem(routineKey) === '1';
-      const eveningComplete = localStorage.getItem(eveningKey) === '1';
-      
-      updateCompletionItem('completionDomino', dominoComplete);
-      updateCompletionItem('completionRoutine', routineComplete);
-      updateCompletionItem('completionEvening', eveningComplete);
-    }
-    
-    function updateCompletionItem(id, complete){
-      const item = document.getElementById(id);
-      if (!item) return;
-      
-      if (complete){
-        item.classList.add('done');
-        item.querySelector('.check').textContent = '✓';
-      } else {
-        item.classList.remove('done');
-        item.querySelector('.check').textContent = '☐';
-      }
-    }
-    
-    // Add click handlers for completion items
-    ['completionDomino', 'completionRoutine', 'completionEvening'].forEach(id => {
-      document.getElementById(id)?.addEventListener('click', ()=>{
-        const profile = getCurrentProfile();
-        if (!profile) return;
-        
-        const day = getCurrentDay();
-        const type = id.replace('completion', '').toLowerCase();
-        const key = `${profile.id}.completion.${type}.${day}`;
-        
-        const current = localStorage.getItem(key) === '1';
-        localStorage.setItem(key, current ? '0' : '1');
-        updateCompletionTracker();
-        toast(current ? '☐ Unchecked' : '✓ Checked');
-      });
-    });
-    
     // ---- STREAK COUNTER ----
     function updateStreakCounter(){
       const profile = getCurrentProfile();
@@ -1791,9 +1876,12 @@
       
       if (streak > 0){
         badge.style.display = 'inline-flex';
+        badge.style.background = 'linear-gradient(135deg, #ff6b6b, #ff8e53)';
         count.textContent = streak === 1 ? '1 day' : `${streak} days`;
       } else {
-        badge.style.display = 'none';
+        badge.style.display = 'inline-flex';
+        badge.style.background = 'linear-gradient(135deg, #6b7280, #9ca3af)';
+        count.textContent = 'Start your streak!';
       }
     }
     
@@ -1953,7 +2041,6 @@
       if (!localStorage.getItem(dayKey())) localStorage.setItem(dayKey(), '1');
       await renderDay(getCurrentDay());
       updateStreakCounter();
-      updateCompletionTracker();
       updateDayDisplay();
       showOnboarding();
     })();
